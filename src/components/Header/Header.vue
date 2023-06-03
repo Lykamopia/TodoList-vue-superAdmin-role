@@ -1,0 +1,45 @@
+<template>
+  <nav
+    class="h-56 bg-primaryNavColor w-full justify-between flex pl-16 relative flex-wrap"
+  >
+    <div class="flex">
+      <h1 class="text-3xl font-bold">{{ type }}</h1>
+      <div class="mx-16 mt-2 relative">
+        <button>
+          <SimpleLineIconsMagnfier
+            class="absolute -left-6 top-1 cursor-pointer"
+          />
+        </button>
+        <input
+          class="outline-none border-b-2 bg-primaryNavColor"
+          type="text"
+          name="search"
+          id="search"
+          v-model="searchText"
+          @input="searchEvent"
+          placeholder="Search Users"
+        />
+      </div>
+    </div>
+    <h1 class="text-4xl font-bold -mt-8">To-do List</h1>
+    <h1 class="text-countColor text-sm -mt-8">Total: {{ totalCount }} Users</h1>
+  </nav>
+</template>
+
+<script setup>
+import SimpleLineIconsMagnfier from "../Icons/SimpleLineIconsMagnifier.vue";
+import { ref } from "vue";
+const props = defineProps(["totalCount", "type"]);
+const searchText = ref("");
+const  emits  = defineEmits(["filter"]);
+const searchEvent = () => {
+  emits("filter", searchText.value);
+};
+</script>
+
+<style scoped>
+nav {
+  width: 100%;
+  padding: 40px 60px;
+}
+</style>

@@ -30,7 +30,7 @@ A simple Todo List application built with Vue.js and GraphQL.
 1. Clone the repository:
 
    ```shell
-   git clone https://github.com/your-username/todo-list.git
+   git clone https://github.com/Lykamopia/TodoList.git
 2. cd todo-list
 3. npm install
 4. Configure the GraphQL endpoint:

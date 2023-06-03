@@ -1,7 +1,6 @@
 <script setup>
 import UserList from "./components/Users/UserList.vue";
 import { useQuery } from "@vue/apollo-composable";
-import gql from "graphql-tag";
 import { watchEffect } from "vue";
 import { ref , computed } from "vue";
 import Header from "./components/Header/Header.vue";
@@ -9,25 +8,16 @@ import Dialog from "./components/Dialog/Dialog.vue";
 import SkeletonLoader from "./components/Loader/SkeletonLoader.vue"
 import SimpleLineIconsSettings from "./components/Icons/SimpleLineIconsSettings.vue"
 import SolarClipboardCheckLineDuotone from "./components/Icons/SolarClipboardCheckLineDuotone.vue";
-const { result, loading } = useQuery(gql`
-  query MyQuery @cached {
-    users {
-      id
-      name
-      todos {
-        completed
-        id
-        title
-      }
-    }
-  }
-`);
+import { useGraphQLStore } from './store/GraphQlStore';
+const graphqlStore = useGraphQLStore();
+const query = graphqlStore.fetchedData;
+const { result, loading } = useQuery(query);
+
 const fetchedValue = ref([]);
 const addBtnClicked = ref(false);
 const TotalNumber = ref("");
 const searchText = ref('');
 const optionButton = ref(false);
-const isArrayEmpty = ref(false);
 
 const showModal = () => {
  if (!addBtnClicked.value) {
@@ -49,6 +39,7 @@ const handleOptionEvent = (data) => {
     optionButton.value = !optionButton.value;
   }
 }
+
 watchEffect(() => {
   if (result.value?.users) {
     fetchedValue.value = result.value.users;

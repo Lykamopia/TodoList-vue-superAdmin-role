@@ -8,7 +8,7 @@
         {{ name }}
       </li>
       <li class="w-1/4 text-left">{{ id }}</li>
-      <li class="cursor-pointer w-1/4 flex justify-end pr-3">
+      <li @click="optionEvent" class="cursor-pointer w-1/4 flex justify-end pr-3">
         <div v-if="optionsIsClicked" class="speech-bubble">
           <div
             class="bg-gray-200 absolute right-12 z-20 top-12  w-26 p-1 rounded-md shadow-lg content"
@@ -24,7 +24,7 @@
             </span>
           </div>
         </div>
-        <div @click="optionEvent" class="hover:bg-gray-200 w-9 h-9 rounded-full p-1 transition duration-100 hover:shadow-sm ease-in-out">
+        <div class="hover:bg-gray-200 w-9 h-9 rounded-full p-1 transition duration-100 hover:shadow-sm ease-in-out">
           <SimpleLineIconsOptions  class="mt-1.5 ml-1.5" />
         </div>
       </li>

@@ -25,7 +25,7 @@
 
       <div class="fixed inset-0 overflow-y-none">
         <div
-          class="flex h-full items-center justify-end p-4 text-center"
+          class="flex h-full items-center justify-center p-4 text-center"
         >
           <TransitionChild
             as="template"

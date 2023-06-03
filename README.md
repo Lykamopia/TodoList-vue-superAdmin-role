@@ -39,8 +39,10 @@ A simple Todo List application built with Vue.js and GraphQL.
  
    ```shell
    npm install
-4. Configure the GraphQL endpoint:
+4. Configure the GraphQL endpoint
+
     Open the src/apollo/ApolloClient.js file.
+    
     Update the GRAPHQL_ENDPOINT variable with the URL of your GraphQL server.
 5. Serve the project
 

@@ -17,12 +17,12 @@
           id="search"
           v-model="searchText"
           @input="searchEvent"
-          placeholder="Search Users"
+          placeholder="Search" 
         />
       </div>
     </div>
     <h1 class="text-4xl font-bold -mt-8">To-do List</h1>
-    <h1 class="text-countColor text-sm -mt-8">Total: {{ totalCount }} Users</h1>
+    <h1 class="text-countColor text-sm -mt-8">Total: {{ totalCount }} {{ type }}</h1>
   </nav>
 </template>
 

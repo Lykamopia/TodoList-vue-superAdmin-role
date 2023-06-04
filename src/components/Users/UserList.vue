@@ -7,8 +7,9 @@
       <li class="w-5/12 text-left font-bold text-blue-800 font-mono text-xl">
         {{ name }}
       </li>
-      <li class="w-1/4 text-left">{{ id }}</li>
-      <li @click="optionEvent" class="cursor-pointer w-1/4 flex justify-end pr-3">
+      <li class="w-1/5 text-left">{{ id }}</li>
+      <li v-if="progress" class="w-1/5 text-left">{{ complete ? "Completed" :"Not Completed" }}</li>
+      <li @click="optionEvent" class="cursor-pointer w-1/5 flex justify-end pr-3 relative">
         <div v-if="optionsIsClicked" class="speech-bubble">
           <div
             class="bg-gray-200 absolute right-12 z-20 top-12  w-26 p-1 rounded-md shadow-lg content"
@@ -25,7 +26,9 @@
           </div>
         </div>
         <div class="hover:bg-gray-200 w-9 h-9 rounded-full p-1 transition duration-100 hover:shadow-sm ease-in-out">
-          <SimpleLineIconsOptions  class="mt-1.5 ml-1.5" />
+          <!-- <SimpleLineIconsOptions  class="mt-1.5 ml-1.5" /> -->
+          <!-- <svg-icon type="mdi" :path="path" class="mt-1.5 ml-1.5"></svg-icon> -->
+          <i class="mdi mdi-dots-horizontal  ml-1.5"></i>
         </div>
       </li>
     </ul>
@@ -34,17 +37,25 @@
 </template>
 
 <script setup>
-import SimpleLineIconsOptions from "../Icons/SimpleLineIconsOptions.vue";
+// import SimpleLineIconsOptions from "../Icons/SimpleLineIconsOptions.vue";
+// import SvgIcon from '@jamescoyle/vue-icon';
+// import { mdiPencil } from '@mdi/js';
 import { ref } from "vue";
 import SimpleLineIconsPencil from "../Icons/SimpleLineIconsPencil.vue";
 import SimpleLineIconsTrash from "../Icons/SimpleLineIconsTrash.vue";
-const props = defineProps(["id", "name", "sequence"]);
+const props = defineProps(["id", "name", "sequence","progress","complete"]);
 const emits = defineEmits(["optionsClicked"]);
 const optionsIsClicked = ref(false);
 const optionEvent = () => {
   optionsIsClicked.value = !optionsIsClicked.value;
   emits("optionsClicked", optionsIsClicked.value);
 };
+
+// const backEvent = () => {
+//   if(optionsIsClicked.value == true){
+//     optionsIsClicked.value = false;
+//   }
+// }
 </script>
 
 <style scoped>

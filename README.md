@@ -48,7 +48,7 @@ A simple Todo List application built with Vue.js and GraphQL.
 
    ```shell
    npm run dev
-6. Open your browser and visit http://localhost:5171 to view the Todo List application.
+6. Open your browser and visit http://localhost:5173 to view the Todo List application.
 
 ### Contributing
 Contributions are welcome! If you find any issues or have suggestions for improvement, please create an issue or submit a pull request.

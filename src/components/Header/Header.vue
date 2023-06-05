@@ -25,7 +25,18 @@
     <div v-if="progress">
     <i class="mdi mdi-bell-badge text-xl mx-3 cursor-pointer"></i>
     <i class="mdi mdi-email text-xl cursor-pointer"></i>
-    <i class="mdi mdi-account-circle text-xl ml-3 mr-1 cursor-pointer"></i> <span class="font-sans font-thin">Alhamdu</span> 
+    <i @mouseenter="isHovered = true" @mouseleave="isHovered = false"  class="mdi mdi-account-circle text-xl ml-3 mr-1 cursor-pointer"></i> <span class="font-sans font-thin">Alhamdu</span> 
+
+    
+    <div v-if="isHovered" class="relative bg-white h-24 z-40 rounded-lg shadow-lg">
+        <div class="m-2 flex flex-wrap cursor-pointer rounded-t-md  text-left">
+            <i class="mdi mdi-alpha-a-circle text-6xl w-fit text-black  cursor-pointer"></i>
+            <span class="font-sans font-bold text-xl text-gray-700">Alhamdu</span>
+            <span class="text-gray-700 text-sm text-right absolute right-12 top-8">@alex</span>
+        </div>
+            <span class="font-sans text-md m-2 text-gray-600 ml-12 text-center font-medium">Stay safe</span>
+    </div>
+
   </div>
   </nav>
 </template>
@@ -34,6 +45,7 @@
 import { ref } from "vue";
 const props = defineProps(["totalCount", "type","name","progress"]);
 const searchText = ref("");
+const isHovered = ref(false);
 const  emits  = defineEmits(["filter"]);
 const searchEvent = () => {
   emits("filter", searchText.value);

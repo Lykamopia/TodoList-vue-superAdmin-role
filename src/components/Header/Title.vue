@@ -50,6 +50,28 @@
           >
         </div>
       </div>
+
+      <div v-if="progress" class="relative">
+        <h1
+          @click="filterHadnler"
+          class="mr-2 cursor-pointer hover:bg-gray-100 rounded-t-md transition ease-in delay-75 h-8 transition text-center px-4"
+        >
+          Filter by<i class="mdi" :class="sortBtn?'mdi-chevron-up ':'mdi-chevron-down'"></i>
+        </h1>
+        <div
+          v-if="filterBtn"
+          class="bg-gray-200 absolute z-20 w-28 p-1 rounded-md shadow-lg content"
+        >
+          <span
+            class="px-3 cursor-pointer hover:bg-gray-300 py-2 rounded-md flex justify-between text-sm"
+            >Completed</span
+          >
+          <span
+            class="px-3 cursor-pointer hover:bg-gray-300 py-2 rounded-md flex justify-between text-sm"
+            >Incomplete</span
+          >
+        </div>
+      </div>
       <!--  -->
     </span>
     <button
@@ -88,6 +110,7 @@ const props = defineProps(["progress"]);
 const title1 = ref("");
 const title2 = ref("")
 const sortBtn = ref(false);
+const filterBtn = ref(false)
 if (props.progress) {
   title1.value = "Task";
   title2.value = "Title"
@@ -101,6 +124,9 @@ const goBack = () => {
 const sort = () => {
   sortBtn.value = !sortBtn.value;
 };
+const filterHadnler = () => {
+  filterBtn.value = !filterBtn.value;
+}
 </script>
 
 <style scoped>

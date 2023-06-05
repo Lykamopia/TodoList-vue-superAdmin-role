@@ -2,6 +2,7 @@
   <nav
     class="h-56 bg-primaryNavColor w-full justify-between flex pl-16 relative flex-wrap"
   >
+  
     <div class="flex">
       <h1 class="text-3xl font-bold">{{ type }}</h1>
       <div class="mx-16 mt-2 relative">
@@ -21,12 +22,17 @@
     </div>
     <h1 class="text-4xl font-bold -mt-8">To-do List</h1>
     <h1 class="text-countColor text-sm -mt-8">Total: {{ totalCount }} {{ type }}</h1>
+    <div v-if="progress">
+    <i class="mdi mdi-bell-badge text-xl mx-3 cursor-pointer"></i>
+    <i class="mdi mdi-email text-xl cursor-pointer"></i>
+    <i class="mdi mdi-account-circle text-xl ml-3 mr-1 cursor-pointer"></i> <span class="font-sans font-thin">Alhamdu</span> 
+  </div>
   </nav>
 </template>
 
 <script setup>
 import { ref } from "vue";
-const props = defineProps(["totalCount", "type"]);
+const props = defineProps(["totalCount", "type","name","progress"]);
 const searchText = ref("");
 const  emits  = defineEmits(["filter"]);
 const searchEvent = () => {

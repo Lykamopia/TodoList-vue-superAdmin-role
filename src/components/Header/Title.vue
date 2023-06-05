@@ -1,4 +1,5 @@
 <template>
+  <div>
   <div class="flex justify-between relative font-medium pt-6 px-6">
     <i
       v-if="progress"
@@ -59,8 +60,11 @@
       ><span class="absolute top-2 right-4">Add {{ title1 }}</span>
     </button>
   </div>
-  
-  <ul class="flex justify-between mt-2 bg-gray-200 py-3 px-4 font-bold">
+  <span v-if="progress" class="flex mt-2 bg-gray-400 w-full h-2">
+        <div class="anim bg-green-600 h-2  rounded-r-md"></div>
+        <div class="anim2 bg-red-600 h-2 rounded-l-md"></div>
+  </span>
+  <ul class="flex justify-between  bg-gray-200 py-3 px-4 font-bold">
     <li class="w-1/12 text-left">#</li>
     <li class="w-5/12 text-left flex">
       {{}} <i class="mdi text-xl" :class="progress? 'mdi-checkbox-marked-circle-auto-outline' : 'mdi-account-circle-outline' "></i> 
@@ -73,6 +77,7 @@
       Option <i class="mdi mdi-cog ml-2 text-xl"></i> 
     </li>
   </ul>
+</div>
 </template>
 
 <script setup>
@@ -98,4 +103,28 @@ const sort = () => {
 };
 </script>
 
-<style></style>
+<style scoped>
+.anim{
+  animation: fillAnimation 2s ease-in-out forwards;
+}
+.anim2{
+  animation: fillAnimation2 2s ease-in-out forwards;
+}
+@keyframes fillAnimation {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 75%;
+  }
+}
+@keyframes fillAnimation2 {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 25%;
+  }
+}
+</style>
+

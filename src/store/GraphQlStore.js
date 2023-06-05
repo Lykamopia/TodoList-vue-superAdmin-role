@@ -16,6 +16,23 @@ export const useGraphQLStore = defineStore("graphql", {
         }
       }
     `,
+    insertedData: gql`
+    mutation inserUsers($name : String!){
+      insert_users_one(object:{
+      name: $name
+        }){
+      id
+      name
+    } 
+      }
+    `,
+    deletedData : gql`
+    mutation deleteUsers($id: Int!) {
+      delete_users_by_pk(id : $id) {
+        id,
+      }
+    }
+    `
   }),
 });
 

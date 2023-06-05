@@ -10,7 +10,10 @@ export default {
         primaryNavColor:'#23328C',
         countColor: '#9E9E9E',
         body: '#FAFAFA',
-      }
+      },
+      fontFamily: {
+        sans: ['Lato'],
+      },
     },
   },
   plugins: [],

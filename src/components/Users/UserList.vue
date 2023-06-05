@@ -1,10 +1,10 @@
 <template>
   <div>
     <ul
-      class="flex justify-between py-3 px-4 hover:bg-gray-100 relative cursor-pointer"
+      class="flex justify-between py-3 font-sans px-4 hover:bg-gray-100 relative cursor-pointer"
     >
       <li class="w-1/12 text-left">{{ sequence }}</li>
-      <li class="w-5/12 text-left font-bold text-blue-800 font-mono text-xl">
+      <li class="w-5/12 text-left font-bold text-gray-700 text-xl">
         {{ name }}
       </li>
       <li class="w-1/5 text-left">{{ id }}</li>
@@ -28,7 +28,11 @@
 
 <script setup>
 import { ref } from "vue";
-const props = defineProps(["id", "name", "sequence","progress","complete"]);
+import { useQuery ,useMutation } from "@vue/apollo-composable";
+import { useGraphQLStore } from "../../store/GraphQlStore";
+const graphqlStore = useGraphQLStore();
+const { mutate: deleteUser } = useMutation(graphqlStore.deletedData);
+const props = defineProps(["id", "name","names","sequence","progress","complete"]);
 const emits = defineEmits(["optionsClicked"]);
 const optionsIsClicked = ref(false);
 const optionEvent = () => {
@@ -36,8 +40,20 @@ const optionEvent = () => {
   emits("optionsClicked", optionsIsClicked.value);
 };
 const deleteEventHandler = () => {
-  console.log("delete is clilcked")
+  if(props.progress)
+  console.log("delete is clilcked from todo")
+  else if (!props.progress) {
+    console.log(props.id,props.name);
+    try{
+      deleteUser(props.id)
+      console.log("User is deleted sucsfully");
+    }catch(e){
+      console.log(e);
+    }
+    console.log("delete is clicked from the user")
+  } 
 }
+
 </script>
 
 <style scoped>

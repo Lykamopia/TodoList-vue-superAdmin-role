@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-center">
-    <Header @filter="handleSearchEvent" :totalCount="TotalNumber" type="Task" />
+    <Header @filter="handleSearchEvent" :totalCount="TotalNumber" type="Task" :progress="true"/>
     <div
       class="border rounded-lg shadow-md text-black bg-body h-fit min-h-max container absolute z-10 top-32"
     >
@@ -23,6 +23,7 @@
         <div v-for="(value, index) in SearchedItems" :key="index">
           <div v-for="(val, inde) in value.todos" :key="inde">
             <UserList
+              @nameEvent="nameHandler"
               @editEvent="showModal"
               :id="val.id"
               :name="val.title"
@@ -55,6 +56,7 @@ const props = defineProps(['id']);
 const fetchedValue = ref([]);
 const TotalNumber = ref("");
 const searchText = ref("");
+const name = ref("");
 const addBtnClicked = ref(false);
 watchEffect(() => {
   if (result.value?.users) {
@@ -96,6 +98,9 @@ const showModal = () => {
     addBtnClicked.value = false;
   }
 };
+const nameHandler = (data) => {
+  name.value = data;
+}
 </script>
 
 <style scoped>

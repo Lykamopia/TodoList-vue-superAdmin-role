@@ -11,16 +11,7 @@ import { useGraphQLStore } from "../store/GraphQlStore";
 const graphqlStore = useGraphQLStore();
 const query = graphqlStore.fetchedData;
 const { result, loading , error } = useQuery(query);
-const { mutate: insertUsers } = useMutation(gql`
-      mutation inserUsers($name : String!){
-      insert_users_one(object:{
-      name: $name
-        }){
-      id
-      name
-    } 
-      }
-    `);
+const { mutate: insertUsers } = useMutation(graphqlStore.insertedData);
 
 const fetchedValue = ref([]);
 const addBtnClicked = ref(false);
@@ -78,7 +69,7 @@ const handleUserInput = (data) => {
 </script>
 <template>
   <div class="flex justify-center">
-    <Header @filter="handleSearchEvent" :totalCount="TotalNumber" type="Users" />
+    <Header @filter="handleSearchEvent" :totalCount="TotalNumber" type="Users" :progress="false"/>
     <div
       class="border rounded-lg shadow-md text-black bg-body h-fit min-h-max container absolute z-10 top-32"
     >

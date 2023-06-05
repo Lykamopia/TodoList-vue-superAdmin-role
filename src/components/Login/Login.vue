@@ -32,7 +32,6 @@
   const login = () => {
     if(username.value == "check" && password.value == "check123"){
         router.push({ name: 'users' });
-        console.log('Logging in...');
     }
     else{
             error.value="* Incorrect username or password"

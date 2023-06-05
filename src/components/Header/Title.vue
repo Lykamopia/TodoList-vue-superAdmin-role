@@ -1,32 +1,103 @@
 <template>
-  <div class="flex justify-between font-medium pt-6 px-6">
-        <span class="flex text-gray-500">
-          <h1 class="mr-12 cursor-pointer" @click="displayAllUser">All Users</h1>
-          <h1  class="cursor-pointer"  @click="displayAllUser">New Users</h1>
-        </span>
-        <button
-          @click="$emit('showModal',true)"
-          class="bg-primaryNavColor rounded-full text-white px-4 relative w-32 text-left"
+  <div class="flex justify-between relative font-medium pt-6 px-6">
+    <i
+      v-if="progress"
+      @click="goBack"
+      class="mdi mdi-arrow-left absolute text-3xl text-gray-500 hover:bg-gray-100 transition ease-in delay-75 cursor-pointer rounded-full px-1"
+    ></i>
+    <span class="flex text-gray-500">
+      <h1
+        class="ml-12 mr-2 h-8 rounded-t-md hover:bg-gray-100 border-b-2 border-primaryNavColor transition ease-in delay-75 cursor-pointer text-center px-4"
+      >
+        All {{ title1 }}s
+      </h1>
+      <h1
+        class="mr-2 cursor-pointer hover:bg-gray-100 rounded-t-md transition ease-in delay-75 h-8 transition text-center px-4"
+      >
+        New {{ title1 }}
+      </h1>
+      <h1
+        v-if="progress"
+        class="mr-2 cursor-pointer hover:bg-gray-100 rounded-t-md transition ease-in delay-75 h-8 transition text-center px-4"
+      >
+        Completed
+      </h1>
+      <h1
+        v-if="progress"
+        class="mr-2 cursor-pointer hover:bg-gray-100 rounded-t-md transition ease-in delay-75 h-8 transition text-center px-4"
+      >
+        Not-Completed
+      </h1>
+      <div class="relative">
+        <h1
+          @click="sort"
+          class="mr-2 cursor-pointer hover:bg-gray-100 rounded-t-md transition ease-in delay-75 h-8 transition text-center px-4"
         >
-          <b class="text-4xl">+</b
-          ><span class="absolute top-2 right-4">Add User</span>
-        </button>
-   </div>
-      <ul class="flex justify-between mt-2 bg-gray-200 py-3 px-4 font-bold">
-        <li class="w-1/12 text-left ">#</li>
-        <li class="w-5/12 text-left flex">{{ }} <SolarClipboardCheckLineDuotone class="ml-2 mt-1"/> </li>
-        <li class="w-1/5 text-left">ID</li>
-        <li v-if="progress" class="w-1/5 text-left">Progress</li>
-        <li class="w-1/5 flex justify-end">Option <SimpleLineIconsSettings class="ml-2 mt-1"/></li>
-      </ul>
+          sort <i class="mdi" :class="sortBtn?'mdi-chevron-up ':'mdi-chevron-down'"></i>
+        </h1>
+        <div
+          v-if="sortBtn"
+          class="bg-gray-200 absolute z-20 w-28 p-1 rounded-md shadow-lg content"
+        >
+          <span
+            class="px-3 cursor-pointer hover:bg-gray-300 py-2 rounded-md flex justify-between text-sm"
+            >ID</span
+          >
+          <span
+            class="px-3 cursor-pointer hover:bg-gray-300 py-2 rounded-md flex justify-between text-sm"
+            >{{ title2 }}</span
+          >
+        </div>
+      </div>
+      <!--  -->
+    </span>
+    <button
+      @click="$emit('showModal', true)"
+      class="bg-primaryNavColor rounded-full text-white px-4 relative w-32 text-left"
+    >
+      <b class="text-4xl">+</b
+      ><span class="absolute top-2 right-4">Add {{ title1 }}</span>
+    </button>
+  </div>
+  
+  <ul class="flex justify-between mt-2 bg-gray-200 py-3 px-4 font-bold">
+    <li class="w-1/12 text-left">#</li>
+    <li class="w-5/12 text-left flex">
+      {{}} <SolarClipboardCheckLineDuotone class="ml-2 mt-1" />
+    </li>
+    <li class="w-1/5 text-left">ID</li>
+    <li v-if="progress" class="w-1/5 relative text-left">
+      Progress <i class="mdi mdi-circle-small text-5xl absolute right-0 -top-3"></i>
+    </li>
+    <li class="w-1/5 flex justify-end">
+      Option <SimpleLineIconsSettings class="ml-2 mt-1" />
+    </li>
+  </ul>
 </template>
 
 <script setup>
-import SimpleLineIconsSettings from '../Icons/SimpleLineIconsSettings.vue';
-import SolarClipboardCheckLineDuotone from '../Icons/SolarClipboardCheckLineDuotone.vue';
-const props = defineProps(['progress']);
+import SimpleLineIconsSettings from "../Icons/SimpleLineIconsSettings.vue";
+import SolarClipboardCheckLineDuotone from "../Icons/SolarClipboardCheckLineDuotone.vue";
+import { useRouter } from "vue-router";
+import { ref } from "vue";
+const router = useRouter();
+const props = defineProps(["progress"]);
+const title1 = ref("");
+const title2 = ref("")
+const sortBtn = ref(false);
+if (props.progress) {
+  title1.value = "Task";
+  title2.value = "Title"
+} else {
+  title1.value = "User";
+  title2.value = "Username"
+}
+const goBack = () => {
+  router.go(-1);
+};
+const sort = () => {
+  sortBtn.value = !sortBtn.value;
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

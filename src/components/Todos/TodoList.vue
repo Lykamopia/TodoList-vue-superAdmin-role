@@ -4,14 +4,14 @@
     <div
       class="border rounded-lg shadow-md text-black bg-body h-fit min-h-max container absolute z-10 top-32"
     >
-      <Title :progress="true" />
+      <Title @showModal="showModal" :progress="true" />
       <div
         v-if="loading"
         class="w-full h-56 flex flex-col justify-center align-center"
       >
         <SkeletonLoader class="w-full h-6 " />
-        <SkeletonLoader class="w-full h-12 mt-2" />
-        <SkeletonLoader class="w-full h-12 mt-2" />
+        <SkeletonLoader class="w-full h-6 mt-2" />
+        <SkeletonLoader class="w-full h-6 mt-2" />
       </div>
       <div
         v-else-if="filteredItems.length == 0"
@@ -23,6 +23,7 @@
         <div v-for="(value, index) in SearchedItems" :key="index">
           <div v-for="(val, inde) in value.todos" :key="inde">
             <UserList
+              @editEvent="showModal"
               :id="val.id"
               :name="val.title"
               :sequence="inde + 1"
@@ -33,7 +34,7 @@
         </div>
       </div>
     </div>
-    <Dialog />
+    <Dialog :Open="addBtnClicked" @closeModal="showModal" class=""/>
   </div>
 </template>
 
@@ -50,15 +51,11 @@ const graphqlStore = useGraphQLStore();
 const query = graphqlStore.fetchedData;
 const { result, loading } = useQuery(query);
 
-const props = defineProps({
-  id: {
-    type: String,
-    required: true,
-  },
-});
+const props = defineProps(['id']);
 const fetchedValue = ref([]);
 const TotalNumber = ref("");
 const searchText = ref("");
+const addBtnClicked = ref(false);
 watchEffect(() => {
   if (result.value?.users) {
     fetchedValue.value = result.value.users;
@@ -89,6 +86,15 @@ const SearchedItems = computed(() => {
 const handleSearchEvent = (data) => {
   searchText.value = data;
   console.log(searchText.value);
+};
+
+const showModal = () => {
+  if (!addBtnClicked.value) {
+    addBtnClicked.value = true;
+  }
+  else{
+    addBtnClicked.value = false;
+  }
 };
 </script>
 

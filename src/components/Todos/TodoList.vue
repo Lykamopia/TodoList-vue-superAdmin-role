@@ -44,12 +44,12 @@ import UserList from "../Users/UserList.vue";
 import Dialog from "../Dialog/Dialog.vue";
 import Title from "../Header/Title.vue";
 import SkeletonLoader from "../Loader/SkeletonLoader.vue";
-import { useQuery } from "@vue/apollo-composable";
+import { useQuery , useSubscription } from "@vue/apollo-composable";
 import { ref, watchEffect, computed } from "vue";
 import { useGraphQLStore } from "../../store/GraphQlStore";
 const graphqlStore = useGraphQLStore();
 const query = graphqlStore.fetchedData;
-const { result, loading } = useQuery(query);
+const { result, loading } = useSubscription(query);
 
 const props = defineProps(['id']);
 const fetchedValue = ref([]);

@@ -1,6 +1,7 @@
 <script setup>
 import UserList from "./Users/UserList.vue";
-import { useQuery } from "@vue/apollo-composable";
+import { useQuery ,useMutation } from "@vue/apollo-composable";
+import { gql } from "graphql-tag";
 import { watchEffect ,ref, computed } from "vue";
 import Header from "./Header/Header.vue";
 import Dialog from "./Dialog/Dialog.vue";
@@ -9,7 +10,17 @@ import Title from "./Header/Title.vue";
 import { useGraphQLStore } from "../store/GraphQlStore";
 const graphqlStore = useGraphQLStore();
 const query = graphqlStore.fetchedData;
-const { result, loading , error} = useQuery(query);
+const { result, loading , error } = useQuery(query);
+const { mutate: insertUsers } = useMutation(gql`
+      mutation inserUsers($name : String!){
+      insert_users_one(object:{
+      name: $name
+        }){
+      id
+      name
+    } 
+      }
+    `);
 
 const fetchedValue = ref([]);
 const addBtnClicked = ref(false);
@@ -57,6 +68,13 @@ const filteredItems = computed(() => {
 const reload = () => {
   location.reload();
 }
+const handleUserInput = (data) => {
+  insertUsers({
+    "name" : data.name,
+  },
+);
+}
+
 </script>
 <template>
   <div class="flex justify-center">
@@ -78,14 +96,15 @@ const reload = () => {
       <div v-else-if="error" class="flex justify-center items-center text-red-900">Something went wrong   <i @click="reload" class="mdi mdi-refresh text-4xl cursor-pointer text-black border m-4 rounded-md hover:bg-blue-100 text-center px-12"></i></div>
       <div v-else-if="filteredItems.length == 0" class="text-red-700 p-40 text-xl text-center font-bold">The User is Not Found!</div>
       <div v-else>
-        <div v-for="(single, index) in filteredItems" :key="index">
+        <div v-for="(single, index) in filteredItems" :key="index" class="relative">
         <router-link :to="{ name: 'TodoList', params: { id: single.id } }">
-            <UserList @editEvent="showModal" @optionsClicked="handleOptionEvent" :id="single.id" :name="single.name" :sequence="index + 1" :progress="false"/>
+            <span class="absolute z-40 bg-transparent	w-1/4 h-12 left-12"></span>
         </router-link>
+        <UserList @editEvent="showModal" @optionsClicked="handleOptionEvent" :id="single.id" :name="single.name" :sequence="index + 1" :progress="false"/>
         </div>
       </div>
     </div>
-    <Dialog :Open="addBtnClicked" @closeModal="showModal" class=""/>
+    <Dialog :totalCount="TotalNumber" :Open="addBtnClicked" @closeModal="showModal" @userInput="handleUserInput"/>
   </div>
 </template>
 

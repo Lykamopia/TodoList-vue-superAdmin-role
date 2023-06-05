@@ -3,7 +3,7 @@
     <i
       v-if="progress"
       @click="goBack"
-      class="mdi mdi-arrow-left absolute text-3xl text-gray-500 hover:bg-gray-100 transition ease-in delay-75 cursor-pointer rounded-full px-1"
+      class="mdi mdi-arrow-left absolute text-3xl text-gray-500 hover:bg-gray-100 transition ease-in delay-75 cursor-pointer rounded-full px-1 bottom-1"
     ></i>
     <span class="flex text-gray-500">
       <h1
@@ -33,7 +33,7 @@
           @click="sort"
           class="mr-2 cursor-pointer hover:bg-gray-100 rounded-t-md transition ease-in delay-75 h-8 transition text-center px-4"
         >
-          sort <i class="mdi" :class="sortBtn?'mdi-chevron-up ':'mdi-chevron-down'"></i>
+          sort by<i class="mdi" :class="sortBtn?'mdi-chevron-up ':'mdi-chevron-down'"></i>
         </h1>
         <div
           v-if="sortBtn"
@@ -63,21 +63,19 @@
   <ul class="flex justify-between mt-2 bg-gray-200 py-3 px-4 font-bold">
     <li class="w-1/12 text-left">#</li>
     <li class="w-5/12 text-left flex">
-      {{}} <SolarClipboardCheckLineDuotone class="ml-2 mt-1" />
+      {{}} <i class="mdi text-xl" :class="progress? 'mdi-checkbox-marked-circle-auto-outline' : 'mdi-account-circle-outline' "></i> 
     </li>
     <li class="w-1/5 text-left">ID</li>
     <li v-if="progress" class="w-1/5 relative text-left">
-      Progress <i class="mdi mdi-circle-small text-5xl absolute right-0 -top-3"></i>
+      Progress <i class="mdi mdi-progress-check text-xl"></i> <i class="mdi mdi-circle-small text-5xl absolute right-0 -top-3"></i>
     </li>
     <li class="w-1/5 flex justify-end">
-      Option <SimpleLineIconsSettings class="ml-2 mt-1" />
+      Option <i class="mdi mdi-cog ml-2 text-xl"></i> 
     </li>
   </ul>
 </template>
 
 <script setup>
-import SimpleLineIconsSettings from "../Icons/SimpleLineIconsSettings.vue";
-import SolarClipboardCheckLineDuotone from "../Icons/SolarClipboardCheckLineDuotone.vue";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 const router = useRouter();

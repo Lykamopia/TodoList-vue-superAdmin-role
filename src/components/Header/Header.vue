@@ -6,9 +6,7 @@
       <h1 class="text-3xl font-bold">{{ type }}</h1>
       <div class="mx-16 mt-2 relative">
         <button>
-          <SimpleLineIconsMagnfier
-            class="absolute -left-6 top-1 cursor-pointer"
-          />
+          <i class="mdi mdi-magnify absolute -left-6 top-1 cursor-pointer"></i>
         </button>
         <input
           class="outline-none border-b-2 bg-primaryNavColor"
@@ -27,7 +25,6 @@
 </template>
 
 <script setup>
-import SimpleLineIconsMagnfier from "../Icons/SimpleLineIconsMagnifier.vue";
 import { ref } from "vue";
 const props = defineProps(["totalCount", "type"]);
 const searchText = ref("");

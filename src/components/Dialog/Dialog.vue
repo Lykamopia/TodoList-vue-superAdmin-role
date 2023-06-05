@@ -1,14 +1,4 @@
-<template>
-  <!-- <div class="fixed inset-0 flex items-center justify-center">
-    <button
-      type="button"
-      @click="openModal"
-      class="rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
-    >
-      Open dialog
-    </button>
-  </div> -->
-  
+<template>  
   <TransitionRoot appear :show="isOpen" as="template">
     <Dialog as="div" @close="closeModal" class="relative  z-20">
       <TransitionChild
@@ -43,16 +33,15 @@
                 as="h3"
                 class="text-xl font-bold leading-6 text-gray-900 flex justify-center mb-8"
               >
-                Add User <MaterialSymbolsPersonAddOutlineRounded class="text-black mx-4 text-2xl"/>
+              <i class="mdi mdi-account-check text-6xl"></i> <br>  Add User 
               </DialogTitle>
               <div class="mt-2 text-gray-500">
                 <span class="flex justify-between my-2">
-                  <label for="id" class="cursor-pointer ml-4">Id</label>
-                <input class=" w-3/4 p-1 outline-none border rounded-md px-2 border-blue-500" type="text" id="id"> 
+                  <label for="id" class="cursor-pointer">Id : {{ totalCount+1 }}</label>
                 </span>
                 <span class="flex justify-between">
                   <label for="username" class="cursor-pointer">User Name </label>
-                <input class=" w-3/4 p-1 outline-none border rounded-md px-2 border-blue-500" type="text" id="username"> 
+                <input class=" w-3/4 p-1 outline-none border rounded-md px-2 border-blue-500" type="text" v-model="inputUsername" id="username"> 
                  </span>
                 <p class="text-sm mt-4">
                   <q>The greatest glory in living lies not in never falling, but in rising every time we fall.</q>-Nelson Mandela
@@ -63,7 +52,7 @@
                 <button
                   type="button"
                   class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                  @click="closeModal"
+                  @click="addInput"
                 >
                   Add
                 </button>
@@ -85,7 +74,6 @@
 
 <script setup>
 import { ref , watch } from 'vue'
-import MaterialSymbolsPersonAddOutlineRounded from '../Icons/MaterialSymbolsPersonAddOutlineRounded.vue';
 import {
   TransitionRoot,
   TransitionChild,
@@ -95,22 +83,23 @@ import {
 } from '@headlessui/vue'
 const isOpen = ref(false)
 const sendToApp = ref(true);
-const props = defineProps({
-  Open: {
-    type: Boolean,
-    required: true
-  }
-});  
-
+const inputUsername = ref('')
+const props = defineProps(['Open','totalCount']);  
 watch(() => props.Open, (newVal) => {
       if (newVal) {
           isOpen.value = newVal;
       }
     });
 
-const emits = defineEmits(['closeModal'])
+const emits = defineEmits(['closeModal','userInput'])
 function closeModal() {
   isOpen.value = sendToApp.value = false;
   emits('closeModal',sendToApp.value);
+}
+const addInput = () =>{
+  const inputs = {
+    name : inputUsername.value
+  }
+  emits('userInput',inputs);
 }
 </script>

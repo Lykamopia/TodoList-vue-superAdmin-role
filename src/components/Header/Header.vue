@@ -28,7 +28,7 @@
     <i @mouseenter="isHovered = true" @mouseleave="isHovered = false"  class="mdi mdi-account-circle text-xl ml-3 mr-1 cursor-pointer"></i> <span class="font-sans font-thin">Alhamdu</span> 
 
     
-    <div v-if="isHovered" class="relative bg-white h-24 z-40 rounded-lg shadow-lg">
+    <div v-if="isHovered" class="relative bg-white h-24 z-40 transition ease-in-out duration-300 rounded-lg shadow-lg">
         <div class="m-2 flex flex-wrap cursor-pointer rounded-t-md  text-left">
             <i class="mdi mdi-alpha-a-circle text-6xl w-fit text-black  cursor-pointer"></i>
             <span class="font-sans font-bold text-xl text-gray-700">Alhamdu</span>

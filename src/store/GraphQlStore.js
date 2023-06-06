@@ -32,7 +32,18 @@ export const useGraphQLStore = defineStore("graphql", {
         id,
       }
     }
-    `
+    `,
+    updateUser : gql`
+    mutation($id :Int!, $idd : Int! , $name : String!) {
+      update_users_by_pk(pk_columns: {id: $id}, _set: {
+        id: $idd
+        name: $name
+      }) {
+        id
+        name
+      }
+    }
+    `,
   }),
 });
 

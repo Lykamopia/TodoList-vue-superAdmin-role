@@ -9,9 +9,10 @@
         v-if="loading"
         class="w-full h-56 flex flex-col justify-center align-center"
       >
-        <SkeletonLoader class="w-full h-6 " />
-        <SkeletonLoader class="w-full h-6 mt-2" />
-        <SkeletonLoader class="w-full h-6 mt-2" />
+        <SkeletonLoader class="w-full h-12 " />
+        <SkeletonLoader class="w-full h-12 mt-2" />
+        <SkeletonLoader class="w-full h-12 mt-2" />
+        <SkeletonLoader class="w-full h-12 mt-2" />
       </div>
       <div
         v-else-if="filteredItems.length == 0"

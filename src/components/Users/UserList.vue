@@ -53,14 +53,8 @@ import { useGraphQLStore } from "../../store/GraphQlStore";
 import { gql } from "graphql-tag";
 
 const graphqlStore = useGraphQLStore();
-const { result, loading , error } = useQuery(graphqlStore.fetchedData);
-const REMOVE_USER = gql`
-    mutation deleteUsers($id: Int!) {
-      delete_users_by_pk(id : $id) {
-        id,
-      }
-    }
-    `
+const REMOVE_USER = graphqlStore.deletedData;
+
 const { mutate: deleteUser } = useMutation(REMOVE_USER,{
     variables : {
     id : props.id

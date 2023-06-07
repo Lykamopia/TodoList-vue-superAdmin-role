@@ -37,7 +37,8 @@
               </DialogTitle>
               <div class="mt-2 text-gray-500">
                 <span class="flex justify-between my-2">
-                  <label for="id" class="cursor-pointer">Id : {{ totalCount+1 }}</label>
+                  <label for="id" class="cursor-pointer">Id</label>
+                  <input class=" w-3/4 p-1 outline-none border rounded-md px-2 border-blue-500" type="number" v-model="inputId"  id="id"> 
                 </span>
                 <span class="flex justify-between">
                   <label for="username" class="cursor-pointer">User Name </label>
@@ -81,24 +82,60 @@ import {
   DialogPanel,
   DialogTitle,
 } from '@headlessui/vue'
+import { useGraphQLStore } from "../../store/GraphQlStore";
+import { useMutation } from "@vue/apollo-composable";
+const graphqlStore = useGraphQLStore();
+const UPDATE_USER = graphqlStore.updatedUser;
+const { mutate: updateUsers } = useMutation(UPDATE_USER);
+const { mutate: insertUsers } = useMutation(graphqlStore.insertedData);
+
 const isOpen = ref(false)
 const sendToApp = ref(true);
-const inputUsername = ref('')
-const props = defineProps(['Open','totalCount']);  
+const inputUsername = ref('');
+const inputId = ref('');
+const props = defineProps(['Open','totalCount',"progress","type"]);  
 watch(() => props.Open, (newVal) => {
       if (newVal) {
           isOpen.value = newVal;
       }
     });
-
+// 
+if(!props.progress && isOpen.value == true && props.type === 'Edit'){
+  inputUsername.value = graphqlStore.name;
+  inputId.value = graphqlStore.id;
+}
 const emits = defineEmits(['closeModal','userInput'])
 function closeModal() {
   isOpen.value = sendToApp.value = false;
   emits('closeModal',sendToApp.value);
 }
 const addInput = () =>{
+  if(props.type === 'Add'){
+    insertUsers({
+    "name" : inputUsername.value,
+  }),
+    console.log("This is from header Add btn");
+  }
+  else if(props.type === 'Edit'){
+  const id = parseInt(graphqlStore.id, 10);
+  const newId = parseInt(inputId.value);
+  const newName = inputUsername.value;
+    updateUsers({
+          id: id,
+          idd: newId,
+          name: newName
+        })
+    .then((result) => {
+      console.log("User updated:", result.data.update_users_by_pk);
+    })
+    .catch((error) => {
+      console.error("Error updating user:", error);
+    });
+  }
   const inputs = {
-    name : inputUsername.value
+    id : inputId.value,
+    name : inputUsername.value,
+    type: props.type
   }
   emits('userInput',inputs);
 }

@@ -24,7 +24,7 @@
             class="bg-gray-200 absolute right-4 z-20 top-8 w-26 p-1 rounded-md shadow-lg content"
           >
             <span
-              @click="$emit('editEvent', true)"
+              @click="editEventHandler"
               class="px-3 hover:bg-gray-300 py-2 rounded-md flex justify-between text-blue-800 text-sm"
               >Edit <i class="mdi mdi-pencil"></i
             ></span>
@@ -48,45 +48,43 @@
 
 <script setup>
 import { ref } from "vue";
-import { useQuery ,useMutation } from "@vue/apollo-composable";
+import { useMutation } from "@vue/apollo-composable";
 import { useGraphQLStore } from "../../store/GraphQlStore";
-import { gql } from "graphql-tag";
 
 const graphqlStore = useGraphQLStore();
+const props = defineProps(["id", "name","sequence","progress","complete","userInputs"]);
+const emits = defineEmits(["optionsClicked","editEvent","idEvent"]);
 const REMOVE_USER = graphqlStore.deletedData;
 
 const { mutate: deleteUser } = useMutation(REMOVE_USER,{
     variables : {
     id : props.id
     },
-    update: (cache, { data }) => {
-      if (props.id.trim != '') {
-        const existingData = cache.readQuery({
-          query: graphqlStore.fetchedData.result.value.users
-        });
-        const updatedData = {
-          users: existingData.users.filter(user => user.id === props.id)
-        };
-        cache.writeQuery({
-          query: graphqlStore.fetchedData.result.value.users,
-          data: updatedData
-        });
-      }
-    }
   })
 
  const deleteEventHandler = () => {
   if(props.progress)
   console.log("delete is clilcked from todo")
   else if (!props.progress) {
-  console.log(graphqlStore.fetchedData.result)
-  console.log("user deleted successfully")
-  deleteUser().then(() => console.log("User deleted successfully"))
+    deleteUser({ variables: { id: props.id } });
+    console.log(" deleted user with id "+props.id);
 }
  }
 
-const props = defineProps(["id", "name","names","sequence","progress","complete"]);
-const emits = defineEmits(["optionsClicked"]);
+ const editEventHandler = () => {
+  emits("editEvent",true);
+  emits("idEvent",props.id);
+  graphqlStore.setId(props.id);
+  graphqlStore.setName(props.name);
+  console.log(props.userInputs)
+  if(props.progress){
+    console.log("Edit button is clicked from todos")
+  }
+  else{
+    console.log("Edit button is clicked from users");
+  }
+ }
+
 const optionsIsClicked = ref(false);
 const optionEvent = () => {
   optionsIsClicked.value = !optionsIsClicked.value;

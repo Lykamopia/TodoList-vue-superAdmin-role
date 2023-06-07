@@ -1,24 +1,22 @@
 <script setup>
 import UserList from "./Users/UserList.vue";
-import { useQuery ,useMutation } from "@vue/apollo-composable";
-import { gql } from "graphql-tag";
 import { watchEffect ,ref, computed } from "vue";
 import Header from "./Header/Header.vue";
 import Dialog from "./Dialog/Dialog.vue";
 import SkeletonLoader from "./Loader/SkeletonLoader.vue";
 import Title from "./Header/Title.vue";
 import { useGraphQLStore } from "../store/GraphQlStore";
+import { useMutation } from "@vue/apollo-composable";
 const graphqlStore = useGraphQLStore();
-const query = graphqlStore.fetchedData;
-const { result, loading , error } = useQuery(query);
-const { mutate: insertUsers } = useMutation(graphqlStore.insertedData);
+const { result , error ,loading} = graphqlStore.fetchedData;
 
 const fetchedValue = ref([]);
 const addBtnClicked = ref(false);
 const TotalNumber = ref("");
 const searchText = ref("");
 const optionButton = ref(false);
-
+const userInputs = ref('');
+const modalType = ref('');
 const showModal = () => {
   if (!addBtnClicked.value) {
     addBtnClicked.value = true;
@@ -27,25 +25,29 @@ const showModal = () => {
     addBtnClicked.value = false;
   }
 };
-
+const editTriger = () => {
+  modalType.value = 'Edit';
+  showModal();
+}
+const addTriger = () => {
+  modalType.value = 'Add';
+  showModal();
+}
 const handleSearchEvent = (data) => {
   searchText.value = data;
   console.log(searchText.value);
 };
-
 const handleOptionEvent = (data) => {
   if (data) {
     optionButton.value = !optionButton.value;
   }
 };
-
 watchEffect(() => {
-  if (result.value?.users) {
-    fetchedValue.value = result.value.users;
+  if (result?.value?.users) {
+    fetchedValue.value = result?.value?.users;
     TotalNumber.value = fetchedValue.value.length;
   }
 });
-
 const filteredItems = computed(() => {
   if (searchText.value != "") {
     const lowercaseSearchText = searchText.value.toLowerCase();
@@ -56,14 +58,9 @@ const filteredItems = computed(() => {
     return fetchedValue.value;
   }
 });
+
 const reload = () => {
   location.reload();
-}
-const handleUserInput = (data) => {
-  insertUsers({
-    "name" : data.name,
-  },
-);
 }
 
 </script>
@@ -73,7 +70,7 @@ const handleUserInput = (data) => {
     <div
       class="border rounded-lg shadow-md text-black bg-body h-fit min-h-max container absolute z-10 top-32"
     >
-      <Title @showModal="showModal" :progress="false"/>      
+      <Title @showModal="addTriger" :progress="false"/>      
       <div v-if="loading" class="w-full h-56 flex flex-col justify-center align-center">
         <SkeletonLoader class="w-full mt-2" />
         <SkeletonLoader class="w-full h-36 mt-2" />
@@ -89,13 +86,13 @@ const handleUserInput = (data) => {
       <div v-else>
         <div v-for="(single, index) in filteredItems" :key="index" class="relative">
         <router-link :to="{ name: 'TodoList', params: { id: single.id } }">
-            <span class="absolute z-40 bg-transparent	w-1/4 h-12 left-12"></span>
+            <span  class="absolute z-40 bg-transparent	w-1/4 h-12 left-12"></span>
         </router-link>
-        <UserList @editEvent="showModal" @optionsClicked="handleOptionEvent" :id="single.id" :name="single.name" :sequence="index + 1" :progress="false"/>
+        <UserList :userInputs="userInputs" @editEvent="editTriger" @optionsClicked="handleOptionEvent" :id="single.id" :name="single.name" :sequence="index + 1" :progress="false"/>
         </div>
       </div>
     </div>
-    <Dialog :totalCount="TotalNumber" :Open="addBtnClicked" @closeModal="showModal" @userInput="handleUserInput"/>
+    <Dialog :totalCount="TotalNumber" :Open="addBtnClicked" @closeModal="showModal" :type="modalType"/>
   </div>
 </template>
 

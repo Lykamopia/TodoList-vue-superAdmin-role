@@ -17,37 +17,14 @@
       >
         New {{ title1 }}
       </h1>
-      <h1
-        v-if="progress"
-        class="mr-2 cursor-pointer hover:bg-gray-100 rounded-t-md transition ease-in delay-75 h-8 transition text-center px-4"
-      >
-        Completed
-      </h1>
-      <h1
-        v-if="progress"
-        class="mr-2 cursor-pointer hover:bg-gray-100 rounded-t-md transition ease-in delay-75 h-8 transition text-center px-4"
-      >
-        Not-Completed
-      </h1>
+      <div v-if="sortBtn || filterBtn" @click="sortBtn = false, filterBtn=false"  class="fixed w-screen z-20 h-screen left-0 top-0"></div>
       <div class="relative">
-        <h1
-          @click="sort"
-          class="mr-2 cursor-pointer hover:bg-gray-100 rounded-t-md transition ease-in delay-75 h-8 transition text-center px-4"
-        >
+        <h1 @click="sort" class="mr-2 cursor-pointer hover:bg-gray-100 rounded-t-md transition ease-in delay-75 h-8 transition text-center px-4">
           sort by<i class="mdi" :class="sortBtn?'mdi-chevron-up ':'mdi-chevron-down'"></i>
         </h1>
-        <div
-          v-if="sortBtn"
-          class="bg-gray-200 absolute z-20 w-28 p-1 rounded-md shadow-lg content"
-        >
-          <span
-            class="px-3 cursor-pointer hover:bg-gray-300 py-2 rounded-md flex justify-between text-sm"
-            >ID</span
-          >
-          <span
-            class="px-3 cursor-pointer hover:bg-gray-300 py-2 rounded-md flex justify-between text-sm"
-            >{{ title2 }}</span
-          >
+        <div v-if="sortBtn" class="bg-gray-200 absolute z-20 w-28 p-1 rounded-md shadow-lg content">
+          <span class="px-3 cursor-pointer hover:bg-gray-300 py-2 rounded-md flex justify-between text-sm">ID</span>
+          <span class="px-3 cursor-pointer hover:bg-gray-300 py-2 rounded-md flex justify-between text-sm">{{ title2 }}</span>
         </div>
       </div>
 
@@ -56,7 +33,7 @@
           @click="filterHadnler"
           class="mr-2 cursor-pointer hover:bg-gray-100 rounded-t-md transition ease-in delay-75 h-8 transition text-center px-4"
         >
-          Filter by<i class="mdi" :class="sortBtn?'mdi-chevron-up ':'mdi-chevron-down'"></i>
+          Filter by<i class="mdi" :class="filterBtn?'mdi-chevron-up ':'mdi-chevron-down'"></i>
         </h1>
         <div
           v-if="filterBtn"

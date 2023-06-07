@@ -18,12 +18,13 @@ const optionButton = ref(false);
 const userInputs = ref('');
 const modalType = ref('');
 const showModal = () => {
-  if (!addBtnClicked.value) {
-    addBtnClicked.value = true;
-  }
-  else{
-    addBtnClicked.value = false;
-  }
+  addBtnClicked.value = !addBtnClicked.value;
+  // if (!addBtnClicked.value) {
+  //   addBtnClicked.value = true;
+  // }
+  // else{
+  //   addBtnClicked.value = false;
+  // }
 };
 const editTriger = () => {
   modalType.value = 'Edit';

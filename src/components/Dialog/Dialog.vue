@@ -42,12 +42,16 @@
                   <input class=" w-3/4 p-1 outline-none border rounded-md px-2 border-blue-500" type="number" v-model="inputId"  id="id"> 
                 </span>
                 <span class="flex justify-between">
-                  <label for="username" class="mt-1 cursor-pointer">User Name </label>
+                  <label v-if="!progress" for="username" class="mt-1 cursor-pointer">User Name </label>
+                  <label v-if="progress" for="username" class="mt-1 cursor-pointer">Task</label>
                 <input class=" w-3/4 p-1 outline-none border rounded-md px-2 border-blue-500" type="text" v-model="inputUsername" id="username"> 
                  </span>
                  <span v-if="progress" class="flex justify-between">
                   <label for="progress" class="mt-2 cursor-pointer">Progress </label>
-                <input class=" w-3/4 p-1 mt-2 outline-none border rounded-md px-2 border-blue-500" type="text" id="progress">
+                  <select v-model="inputProgress" class="w-3/4 p-1 outline-none border rounded h-8 mt-2 border-blue-500 cursor-pointer" name="" id="progress">
+                    <option class="border-none" :value="false">In-completed</option>
+                    <option class="" :value="true">Completed</option>
+                  </select>
                  </span>
                 <p class="text-sm mt-4">
                   <q>The greatest glory in living lies not in never falling, but in rising every time we fall.</q>-Nelson Mandela
@@ -93,12 +97,15 @@ const graphqlStore = useGraphQLStore();
 const UPDATE_USER = graphqlStore.updatedUser;
 const { mutate: updateUsers } = useMutation(UPDATE_USER);
 const { mutate: insertUsers } = useMutation(graphqlStore.insertedData);
+const { mutate: insertTodos } = useMutation(graphqlStore.insertTodo);
+const { mutate: updateTodos } = useMutation(graphqlStore.updateTodo);
 
 const isOpen = ref(false)
 const sendToApp = ref(true);
 const inputUsername = ref('');
 const inputId = ref('');
-const props = defineProps(['Open','totalCount',"progress","type"]);  
+const inputProgress = ref('');
+const props = defineProps(['Open','totalCount',"progress","type","id"]);  
 watch(() => props.Open, (newVal) => {
       if (newVal) {
           isOpen.value = newVal;
@@ -122,14 +129,17 @@ function closeModal() {
   emits('closeModal',sendToApp.value);
 }
 const addInput = () =>{
-  if(props.type === 'Add'){
+  //adding users
+  if(props.type === 'Add' && !progress){
     // graphqlStore.addUser(inputUsername.value)
     insertUsers({
     "name" : inputUsername.value,
   }),
-    console.log("This is from header Add btn");
+    console.log("This is from users header Add btn");
   }
-  else if(props.type === 'Edit'){
+  // updating users
+  else if(props.type === 'Edit' && !progress){
+  console.log("This is from Users edit button")
   const id = parseInt(graphqlStore.id, 10);
   const newId = parseInt(inputId.value);
   const newName = inputUsername.value;
@@ -144,6 +154,35 @@ const addInput = () =>{
     .catch((error) => {
       console.error("Error updating user:", error);
     });
+  }
+// updating todos
+  else if(props.type === 'Edit' && progress){
+  const id = parseInt(graphqlStore.id, 10);
+  const newId = parseInt(inputId.value);
+  const newName = inputUsername.value;
+  updateTodos({
+          oldid: id,
+          id: newId,
+          title: newName,
+          completed : inputProgress.value
+        })
+    .then((result) => {
+      console.log("todo updated:", result.data.update_todos_by_pk);
+    })
+    .catch((error) => {
+      console.error("Error updating user:", error);
+    });
+      console.log("This is from todos edit button with todo id "+id)
+  }
+// inserting todos
+  else if(props.type === 'Add' && progress){
+    // graphqlStore.addUser(inputUsername.value)
+    insertTodos({
+    "userid": props.id,
+    "title" : inputUsername.value,
+    "completed" : inputProgress.value
+  })
+    // console.log("This is from todos header Add btn with user id "+props.id,inputUsername.value,inputProgress.value);
   }
   const inputs = {
     id : inputId.value,

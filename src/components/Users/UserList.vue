@@ -55,19 +55,24 @@ const graphqlStore = useGraphQLStore();
 const props = defineProps(["id", "name","sequence","progress","complete","userInputs"]);
 const emits = defineEmits(["optionsClicked","editEvent","idEvent"]);
 const REMOVE_USER = graphqlStore.deletedData;
-
+const REMOVE_TODO = graphqlStore.deleteTodo;
 const { mutate: deleteUser } = useMutation(REMOVE_USER,{
+    variables : {
+    id : props.id
+    },
+  })
+  const { mutate: deleteTodos } = useMutation(REMOVE_TODO,{
     variables : {
     id : props.id
     },
   })
 
  const deleteEventHandler = () => {
-  if(props.progress)
-  console.log("delete is clilcked from todo")
+  if(props.progress){
+    deleteTodos({ variables: { id: props.id } });
+  }
   else if (!props.progress) {
     deleteUser({ variables: { id: props.id } });
-    console.log(" deleted user with id "+props.id);
 }
  }
 

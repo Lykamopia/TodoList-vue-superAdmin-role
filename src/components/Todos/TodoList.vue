@@ -2,7 +2,7 @@
   <div class="flex justify-center">
     <Header @filter="handleSearchEvent" :totalCount="TotalNumber" type="Task" :progress="true"/>
     <div class="border rounded-lg shadow-md text-black bg-body h-fit min-h-max container absolute z-10 top-32">
-      <Title @showModal="showModal" :progress="true" :completeTask="countCompleted" :incompleteTask="countIncompleted"/>
+      <Title @showModal="addTriger" :progress="true" :completeTask="countCompleted" :incompleteTask="countIncompleted"/>
       <div v-if="loading" class="w-full h-56 flex flex-col justify-center align-center">
         <SkeletonLoader class="w-full h-12 " />
         <SkeletonLoader class="w-full h-12 mt-2" />
@@ -17,7 +17,7 @@
         <div v-for="(value, index) in SearchedItems" :key="index">
           <div v-for="(val, inde) in value.todos" :key="inde">
             <UserList
-              @editEvent="showModal"
+              @editEvent="editTriger"
               :id="val.id"
               :name="val.title"
               :sequence="inde + 1"
@@ -28,7 +28,7 @@
         </div>
       </div>
     </div>
-    <Dialog :Open="addBtnClicked" @closeModal="showModal" :progress="true"/>
+    <Dialog :Open="addBtnClicked" @closeModal="showModal" :progress="true" :type="modalType" :id="id"/>
   </div>
 </template>
 
@@ -48,7 +48,8 @@ const TotalNumber = ref(0);
 const searchText = ref("");
 const addBtnClicked = ref(false);
 const countCompleted = ref(0);
-const countIncompleted = ref(0)
+const countIncompleted = ref(0);
+const modalType = ref('');
 watchEffect(() => {
   if (result.value?.users) {
     fetchedValue.value = result.value.users;
@@ -65,6 +66,7 @@ const filteredItems = computed(() => {
         
         //this is used for account name
         graphqlStore.setName(item.name);
+        graphqlStore.setId(props.id);
       }
    return props.id == item.id
     });
@@ -91,14 +93,22 @@ const handleSearchEvent = (data) => {
 };
 
 const showModal = () => {
-  if (!addBtnClicked.value) {
-    addBtnClicked.value = true;
-  }
-  else{
-    addBtnClicked.value = false;
-  }
+  addBtnClicked.value = !addBtnClicked.value;
+  // if (!addBtnClicked.value) {
+  //   addBtnClicked.value = true;
+  // }
+  // else{
+  //   addBtnClicked.value = false;
+  // }
 };
-
+const editTriger = () => {
+  modalType.value = 'Edit';
+  showModal();
+}
+const addTriger = () => {
+  modalType.value = 'Add';
+  showModal();
+}
 </script>
 
 <style scoped>

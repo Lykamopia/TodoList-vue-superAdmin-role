@@ -154,6 +154,43 @@ export const useGraphQLStore = defineStore("graphql", {
       }
     }
     `,
+    updateTodo : () => gql`
+    mutation updateTodos($oldid:Int!, $id : Int! , $title : String!,$completed : Boolean!) {
+      update_todos_by_pk(pk_columns: {id: $oldid}, _set: {
+        id: $id
+        title: $title
+        completed : $completed
+      }) {
+        id
+        userid
+        title
+        completed
+      }
+    }
+    `,
+    insertTodo: () => gql`
+    mutation insertTodos($userid : Int!, $title: String!, $completed: Boolean!) {
+      insert_todos_one(object: {
+        title: $title, 
+        completed: $completed,
+        userid : $userid
+      }) {
+        id
+        title
+        completed
+        userid
+      }
+    }    
+ `,
+    deleteTodo : () => gql`
+    mutation deleteTodos($id: Int!) {
+      delete_todos_by_pk(id: $id){
+        id
+        title
+        completed
+      }
+    }    
+ `,
   },
   setters: {
 

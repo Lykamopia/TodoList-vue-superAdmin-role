@@ -33,7 +33,8 @@
                 as="h3"
                 class="text-xl font-bold leading-6 text-gray-900 flex justify-center mb-8"
               >
-              <i class="mdi mdi-account-check text-6xl"></i> <br>  Add User 
+              <i class="mdi text-6xl" :class="type === 'Edit'? 'mdi-account-edit' : 'mdi-account-plus' "></i> <br>  {{type}} User 
+              <!-- account-edit -->
               </DialogTitle>
               <div class="mt-2 text-gray-500">
                 <span class="flex justify-between my-2">
@@ -41,8 +42,12 @@
                   <input class=" w-3/4 p-1 outline-none border rounded-md px-2 border-blue-500" type="number" v-model="inputId"  id="id"> 
                 </span>
                 <span class="flex justify-between">
-                  <label for="username" class="cursor-pointer">User Name </label>
+                  <label for="username" class="mt-1 cursor-pointer">User Name </label>
                 <input class=" w-3/4 p-1 outline-none border rounded-md px-2 border-blue-500" type="text" v-model="inputUsername" id="username"> 
+                 </span>
+                 <span v-if="progress" class="flex justify-between">
+                  <label for="progress" class="mt-2 cursor-pointer">Progress </label>
+                <input class=" w-3/4 p-1 mt-2 outline-none border rounded-md px-2 border-blue-500" type="text" id="progress">
                  </span>
                 <p class="text-sm mt-4">
                   <q>The greatest glory in living lies not in never falling, but in rising every time we fall.</q>-Nelson Mandela
@@ -55,7 +60,7 @@
                   class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                   @click="addInput"
                 >
-                  Add
+                  {{type}}
                 </button>
                 <button
                   type="button"

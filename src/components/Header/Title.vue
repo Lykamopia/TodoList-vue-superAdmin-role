@@ -59,9 +59,9 @@
       ><span class="absolute top-2 right-4">Add {{ title1 }}</span>
     </button>
   </div>
-  <span v-if="progress" class="flex mt-2 bg-gray-400 w-full h-2">
-        <div class="anim bg-green-600 h-2  rounded-r-md"></div>
-        <div class="anim2 bg-red-600 h-2 rounded-l-md"></div>
+  <span class="flex mt-2 bg-gray-400 w-full h-2 " :class="progress?'bg-gray-400':'bg-transparent'">
+        <div class="anim bg-green-600 h-2  rounded-r-md" :style="{ width: fillWidth }"></div>
+        <div class="anim2 bg-red-600 h-2 rounded-l-md" :style="{ width: fillWidth2 }"></div>
   </span>
   <ul class="flex justify-between  bg-gray-200 py-3 px-4 font-bold">
     <li class="w-1/12 text-left">#</li>
@@ -81,16 +81,24 @@
 
 <script setup>
 import { useRouter } from "vue-router";
-import { ref } from "vue";
+import { ref , computed } from "vue";
 const router = useRouter();
-const props = defineProps(["progress"]);
+const props = defineProps(["progress","completeTask","incompleteTask"]);
 const title1 = ref("");
 const title2 = ref("")
 const sortBtn = ref(false);
-const filterBtn = ref(false)
+const filterBtn = ref(false);
+
+const fillWidth = computed(() =>
+  `${(props.completeTask / (props.completeTask + props.incompleteTask)) * 100}%`
+);
+const fillWidth2 = computed(() =>
+  `${(props.incompleteTask / (props.completeTask + props.incompleteTask)) * 100}%`
+);
+
 if (props.progress) {
   title1.value = "Task";
-  title2.value = "Title"
+  title2.value = "Title";
 } else {
   title1.value = "User";
   title2.value = "Username"
@@ -104,11 +112,12 @@ const sort = () => {
 const filterHadnler = () => {
   filterBtn.value = !filterBtn.value;
 }
+
 </script>
 
 <style scoped>
 .anim{
-  animation: fillAnimation 2s ease-in-out forwards;
+  animation: fillAnimation 2s ease-out forwards;
 }
 .anim2{
   animation: fillAnimation2 2s ease-in-out forwards;
@@ -118,7 +127,7 @@ const filterHadnler = () => {
     width: 0%;
   }
   100% {
-    width: 75%;
+    width: '';
   }
 }
 @keyframes fillAnimation2 {
@@ -126,8 +135,9 @@ const filterHadnler = () => {
     width: 0%;
   }
   100% {
-    width: 25%;
+    width: '';
   }
 }
+
 </style>
 

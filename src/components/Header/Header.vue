@@ -2,7 +2,6 @@
   <nav
     class="h-56 bg-primaryNavColor w-full justify-between flex pl-16 relative flex-wrap"
   >
-  
     <div class="flex">
       <h1 class="text-3xl font-bold">{{ type }}</h1>
       <div class="mx-16 mt-2 relative">
@@ -31,7 +30,7 @@
         <div class="m-2 flex flex-wrap cursor-pointer rounded-t-md  text-left">
             <i class="mdi mdi-alpha-a-circle text-6xl w-fit text-black  cursor-pointer"></i>
             <span class="font-sans font-bold text-xl text-gray-700">{{ accountName }}</span>
-            <span class="text-gray-700 text-sm  absolute right-4 top-8">@{{accountName}}</span>
+            <span class="text-gray-700 text-sm  absolute right-4 top-8">@id: {{accountId}}</span>
         </div>
             <span class="font-sans text-md m-2 text-gray-600 ml-12 text-center font-medium">Stay safe</span>
     </div>
@@ -49,6 +48,7 @@ const props = defineProps(["totalCount", "type","name","progress"]);
 const searchText = ref("");
 const isHovered = ref(false);
 const accountName = ref(graphqlStore.name);
+const accountId = ref(graphqlStore.id);
 const  emits  = defineEmits(["filter"]);
 const searchEvent = () => {
   emits("filter", searchText.value);

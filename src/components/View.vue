@@ -46,7 +46,6 @@ watchEffect(() => {
   if (result?.value?.users) {
     fetchedValue.value = result?.value?.users;
     graphqlStore.setFetchedResult(fetchedValue.value);
-    console.log(graphqlStore.fetchedResult);
     TotalNumber.value = fetchedValue.value.length;
   }
 });

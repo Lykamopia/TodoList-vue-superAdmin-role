@@ -8,7 +8,7 @@ export default {
     extend: {
       colors:{
         primaryNavColor:'#23328C',
-        countColor: '#9E9E9E',
+        countColor: '#cccccc',
         body: '#FAFAFA',
       },
       fontFamily: {

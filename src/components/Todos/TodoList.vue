@@ -43,7 +43,6 @@ import { ref, watchEffect, computed } from "vue";
 import { useGraphQLStore } from "../../store/GraphQlStore";
 const graphqlStore = useGraphQLStore();
 const { result , error ,loading} = graphqlStore.fetchedData;
-
 const props = defineProps(['id']);
 const fetchedValue = ref([]);
 const TotalNumber = ref("");

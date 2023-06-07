@@ -76,6 +76,7 @@ const { mutate: deleteUser } = useMutation(REMOVE_USER,{
   emits("idEvent",props.id);
   graphqlStore.setId(props.id);
   graphqlStore.setName(props.name);
+  console.log(graphqlStore.id,graphqlStore.name)
   console.log(props.userInputs)
   if(props.progress){
     console.log("Edit button is clicked from todos")

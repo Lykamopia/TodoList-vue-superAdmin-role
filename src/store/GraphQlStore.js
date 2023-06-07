@@ -78,7 +78,7 @@ export const useGraphQLStore = defineStore("graphql", {
     },
     addUser(name) {
       const INSERT_USER = this.insertedData;
-      const { mutate } = useMutation(INSERT_USER, {
+      const { mutate  } = useMutation(INSERT_USER, {
         variables: {
           name: name,
         },

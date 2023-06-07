@@ -98,12 +98,19 @@ watch(() => props.Open, (newVal) => {
       if (newVal) {
           isOpen.value = newVal;
       }
+      if(!props.progress &&  props.type === 'Edit' && isOpen.value){
+        // This is to add previous values into the input fields
+            inputUsername.value = graphqlStore.name;
+            inputId.value = graphqlStore.id;
+      }
+      else if(!isOpen.value){
+        // When the Dialog closes the input fields reset
+        inputUsername.value = '';
+        inputId.value = '';       
+      }
     });
 // 
-if(!props.progress && isOpen.value == true && props.type === 'Edit'){
-  inputUsername.value = graphqlStore.name;
-  inputId.value = graphqlStore.id;
-}
+
 const emits = defineEmits(['closeModal','userInput'])
 function closeModal() {
   isOpen.value = sendToApp.value = false;
@@ -111,6 +118,7 @@ function closeModal() {
 }
 const addInput = () =>{
   if(props.type === 'Add'){
+    // graphqlStore.addUser(inputUsername.value)
     insertUsers({
     "name" : inputUsername.value,
   }),
@@ -138,5 +146,6 @@ const addInput = () =>{
     type: props.type
   }
   emits('userInput',inputs);
+  isOpen.value = false;
 }
 </script>

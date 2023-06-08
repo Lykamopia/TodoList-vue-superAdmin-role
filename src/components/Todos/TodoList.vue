@@ -53,6 +53,7 @@ const modalType = ref('');
 watchEffect(() => {
   if (result.value?.users) {
     fetchedValue.value = result.value.users;
+    graphqlStore.setFetchedResult(fetchedValue.value);
   }
 });
 
@@ -109,6 +110,10 @@ const addTriger = () => {
   modalType.value = 'Add';
   showModal();
 }
+const reload = () => {
+  location.reload();
+}
+
 </script>
 
 <style scoped>

@@ -27,81 +27,81 @@ export const useGraphQLStore = defineStore("graphql", {
     setError(value) {
       this.error = value;
     },
-    deleteUser(id) {
-      const REMOVE_USER = this.deletedData;
-      const { mutate } = useMutation(REMOVE_USER, {
-        variables: {
-          id: id,
-        },
-        update: (cache, data ) => {
-          if (id.trim() !== '') {
-            const existingData = cache.readQuery({
-              query: this.fetchedResult,
-            });
-            const updatedData = {
-              users: existingData.users.filter((user) => user.id !== id),
-            };
-            cache.writeQuery({
-              query: this.fetchedResult,
-              data: updatedData,
-            });
-          }
-        },
-      });
-      return mutate;
-    },
-    updateUser(id, idd,name) {
-      const UPDATE_USER = this.updatedUser;
-      const { mutate } = useMutation(UPDATE_USER, {
-        variables: {
-          id: id,
-          idd: idd,
-          name: name,
-        },
-        update: (cache, { data }) => {
-          if (props.id.trim() !== '' && props.userInputs.name.trim() !== '') {
-            const existingData = cache.readQuery({
-              query: this.fetchedResult,
-            });
-            const updatedData = {
-              users: existingData.users,
-            };
-            cache.writeQuery({
-              query: this.fetchedResult,
-              data: updatedData,
-            });
-          }
-        },
-      });
+    // deleteUser(id) {
+    //   const REMOVE_USER = this.deletedData;
+    //   const { mutate } = useMutation(REMOVE_USER, {
+    //     variables: {
+    //       id: id,
+    //     },
+    //     update: (cache, data ) => {
+    //       if (id.trim() !== '') {
+    //         const existingData = cache.readQuery({
+    //           query: this.fetchedResult,
+    //         });
+    //         const updatedData = {
+    //           users: existingData.users.filter((user) => user.id !== id),
+    //         };
+    //         cache.writeQuery({
+    //           query: this.fetchedResult,
+    //           data: updatedData,
+    //         });
+    //       }
+    //     },
+    //   });
+    //   return mutate;
+    // },
+    // updateUsering(id, idd,name) {
+    //   const UPDATE_USER = this.updatedUser;
+    //   const { mutate } = useMutation(UPDATE_USER, {
+    //     variables: {
+    //       id: id,
+    //       idd: idd,
+    //       name: name,
+    //     },
+    //     update: (cache, { data }) => {
+    //       if (props.id.trim() !== '' && props.userInputs.name.trim() !== '') {
+    //         const existingData = cache.readQuery({
+    //           query: this.fetchedResult,
+    //         });
+    //         const updatedData = {
+    //           users: existingData.users,
+    //         };
+    //         cache.writeQuery({
+    //           query: this.fetchedResult,
+    //           data: updatedData,
+    //         });
+    //       }
+    //     },
+    //   });
 
-      return mutate;
-    },
-    addUser(name) {
-      const INSERT_USER = this.insertedData;
-      const { mutate  } = useMutation(INSERT_USER, {
-        variables: {
-          name: name,
-        },
-        update: (cache, { data }) => {
-          const existingData = cache.readQuery({
-            query: this.fetchedData,
-          });
-          const newUser = {
-            id: data.insert_users_one.id,
-            name: data.insert_users_one.name,
-            todos: [],
-          };
-          const updatedData = {
-            users: [...existingData.users, newUser],
-          };
-          cache.writeQuery({
-            query: this.fetchedData,
-            data: updatedData,
-          });
-        },
-      });
-      return mutate;
-    },
+    //   return mutate;
+    // },
+    // addUser(name) {
+    //   const INSERT_USER = this.insertedData;
+    //   const { mutate  } = useMutation(INSERT_USER, {
+    //     variables: {
+    //       name: name,
+    //     },
+    //     update: (cache, { data }) => {
+    //       const existingData = cache.readQuery({
+    //         query: this.fetchedData,
+    //       });
+    //       const newUser = {
+    //         id: data.insert_users_one.id,
+    //         name: data.insert_users_one.name,
+    //         todos: [],
+    //       };
+    //       const updatedData = {
+    //         users: [...existingData.users, newUser],
+    //       };
+    //       cache.writeQuery({
+    //         query: this.fetchedData,
+    //         data: updatedData,
+    //       });
+    //     },
+    //   });
+    //   return mutate;
+    // },
  
   },
   getters : {
@@ -138,15 +138,17 @@ export const useGraphQLStore = defineStore("graphql", {
     `,
     deletedData : () => gql`
     mutation deleteUsers($id: Int!) {
-      delete_users_by_pk(id : $id) {
-        id,
+      delete_todos(where: {userid: {_eq: $id}}) {
+        affected_rows
       }
-    }
+      delete_users_by_pk(id: $id) {
+        id
+      }
+    }    
     `,
     updatedUser : () => gql`
-    mutation updateUsers($id :Int!, $idd : Int! , $name : String!) {
+    mutation updateUsers($id :Int!, $name : String!) {
       update_users_by_pk(pk_columns: {id: $id}, _set: {
-        id: $idd
         name: $name
       }) {
         id
@@ -155,14 +157,12 @@ export const useGraphQLStore = defineStore("graphql", {
     }
     `,
     updateTodo : () => gql`
-    mutation updateTodos($oldid:Int!, $id : Int! , $title : String!,$completed : Boolean!) {
+    mutation updateTodos($oldid:Int!, $title : String!,$completed : Boolean!) {
       update_todos_by_pk(pk_columns: {id: $oldid}, _set: {
-        id: $id
         title: $title
         completed : $completed
       }) {
         id
-        userid
         title
         completed
       }

@@ -19,12 +19,6 @@ const userInputs = ref('');
 const modalType = ref('');
 const showModal = () => {
   addBtnClicked.value = !addBtnClicked.value;
-  // if (!addBtnClicked.value) {
-  //   addBtnClicked.value = true;
-  // }
-  // else{
-  //   addBtnClicked.value = false;
-  // }
 };
 const editTriger = () => {
   modalType.value = 'Edit';
@@ -94,7 +88,7 @@ const reload = () => {
         </div>
       </div>
     </div>
-    <Dialog :totalCount="TotalNumber" :Open="addBtnClicked" @closeModal="showModal" :type="modalType"/>
+    <Dialog :totalCount="TotalNumber" :Open="addBtnClicked" @closeModal="showModal" :type="modalType" :progress="false"/>
   </div>
 </template>
 

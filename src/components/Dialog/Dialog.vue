@@ -37,10 +37,6 @@
               <!-- account-edit -->
               </DialogTitle>
               <div class="mt-2 text-gray-500">
-                <span class="flex justify-between my-2">
-                  <label for="id" class="cursor-pointer">Id</label>
-                  <input class=" w-3/4 p-1 outline-none border rounded-md px-2 border-blue-500" type="number" v-model="inputId"  id="id"> 
-                </span>
                 <span class="flex justify-between">
                   <label v-if="!progress" for="username" class="mt-1 cursor-pointer">User Name </label>
                   <label v-if="progress" for="username" class="mt-1 cursor-pointer">Task</label>
@@ -57,7 +53,6 @@
                   <q>The greatest glory in living lies not in never falling, but in rising every time we fall.</q>-Nelson Mandela
                 </p>
               </div>
-
               <div class="mt-4">
                 <button
                   type="button"
@@ -65,6 +60,7 @@
                   @click="addInput"
                 >
                   {{type}}
+                  
                 </button>
                 <button
                   type="button"
@@ -130,15 +126,19 @@ function closeModal() {
 }
 const addInput = () =>{
   //adding users
-  if(props.type === 'Add' && !progress){
+  if(props.type === 'Add' && !props.progress){
     // graphqlStore.addUser(inputUsername.value)
     insertUsers({
     "name" : inputUsername.value,
-  }),
+  }).then((result) => {
+      console.log("User added:", result.data.insert_users_one);
+    }).catch((error) => {
+      console.error("Error adding user:", error);
+    });
     console.log("This is from users header Add btn");
   }
   // updating users
-  else if(props.type === 'Edit' && !progress){
+  else if(props.type === 'Edit' && !props.progress){
   console.log("This is from Users edit button")
   const id = parseInt(graphqlStore.id, 10);
   const newId = parseInt(inputId.value);
@@ -156,13 +156,13 @@ const addInput = () =>{
     });
   }
 // updating todos
-  else if(props.type === 'Edit' && progress){
+  else if(props.type === 'Edit' && props.progress){
   const id = parseInt(graphqlStore.id, 10);
   const newId = parseInt(inputId.value);
   const newName = inputUsername.value;
   updateTodos({
           oldid: id,
-          id: newId,
+          // id: newId,
           title: newName,
           completed : inputProgress.value
         })
@@ -170,18 +170,23 @@ const addInput = () =>{
       console.log("todo updated:", result.data.update_todos_by_pk);
     })
     .catch((error) => {
-      console.error("Error updating user:", error);
+      console.error("Error updating todo:", error);
     });
       console.log("This is from todos edit button with todo id "+id)
   }
 // inserting todos
-  else if(props.type === 'Add' && progress){
+  else if(props.type === 'Add' && props.progress){
     // graphqlStore.addUser(inputUsername.value)
     insertTodos({
     "userid": props.id,
     "title" : inputUsername.value,
     "completed" : inputProgress.value
-  })
+  }).then((result) => {
+      console.log("todo inserted:", result.data.insert_todos_one);
+    })
+    .catch((error) => {
+      console.error("Error updating todo:", error);
+    });
     // console.log("This is from todos header Add btn with user id "+props.id,inputUsername.value,inputProgress.value);
   }
   const inputs = {

@@ -41,7 +41,7 @@ import SkeletonLoader from "../Loader/SkeletonLoader.vue";
 import { ref, watchEffect, computed } from "vue";
 import { useGraphQLStore } from "../../store/GraphQlStore";
 const graphqlStore = useGraphQLStore();
-const { result , error ,loading} = graphqlStore.fetchedData;
+const { result , error ,loading,refetch} = graphqlStore.fetchedData;
 const props = defineProps(['id']);
 const fetchedValue = ref([]);
 const TotalNumber = ref(0);
@@ -53,6 +53,7 @@ const modalType = ref('');
 watchEffect(() => {
   if (result.value?.users) {
     fetchedValue.value = result.value.users;
+    // refetch();
     // graphqlStore.setFetchedResult(fetchedValue.value);
   }
 });

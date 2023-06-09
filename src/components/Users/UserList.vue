@@ -52,6 +52,7 @@ import { useMutation } from "@vue/apollo-composable";
 import { useGraphQLStore } from "../../store/GraphQlStore";
 
 const graphqlStore = useGraphQLStore();
+const { result , error ,loading ,refetch} = graphqlStore.fetchedData;
 const props = defineProps(["id", "name","sequence","progress","complete","userInputs"]);
 const emits = defineEmits(["optionsClicked","editEvent","idEvent"]);
 const REMOVE_USER = graphqlStore.deletedData;
@@ -73,6 +74,10 @@ const { mutate: deleteUser } = useMutation(REMOVE_USER,{
   }
   else if (!props.progress) {
     deleteUser({ variables: { id: props.id } });
+    refetch();
+    // const itemIdToRemove = props.id; 
+    // const updatedUsers = result.value.users.filter(user => user.id !== itemIdToRemove);
+    // result.value = { ...result.value, users: updatedUsers };
 }
  }
 

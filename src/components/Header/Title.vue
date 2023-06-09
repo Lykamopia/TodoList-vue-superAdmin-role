@@ -8,14 +8,11 @@
     ></i>
     <span class="flex text-gray-500">
       <button
-        class="ml-12 mr-2 h-8 rounded-t-md hover:bg-gray-100 border-b-2 border-primaryNavColor transition ease-in delay-75 cursor-pointer text-center px-4"
+      @click="AllItemHandler"
+        class="ml-12 mr-2 h-8 rounded-t-md hover:bg-gray-100 transition ease-in delay-75 cursor-pointer text-center px-4"
+        :class="(!completedBtn && !IncompletedBtn)? 'border-b-2 border-primaryNavColor' : ''"
       >
         All {{ title1 }}s
-      </button>
-      <button
-        class="mr-2 cursor-pointer hover:bg-gray-100 rounded-t-md transition ease-in delay-75 h-8 transition text-center px-4"
-      >
-        New {{ title1 }}s
       </button>
       <div v-if="sortBtn || filterBtn" @click="sortBtn = false, filterBtn=false"  class="fixed w-screen z-20 h-screen left-0 top-0"></div>
       <div class="relative">
@@ -23,15 +20,16 @@
           sort by<i class="mdi" :class="sortBtn?'mdi-chevron-up ':'mdi-chevron-down'"></i>
         </button>
         <div v-if="sortBtn" class="bg-gray-200 absolute z-20 w-28 p-1 rounded-md shadow-lg content">
-          <span class="px-3 cursor-pointer hover:bg-gray-300 py-2 rounded-md flex justify-between text-sm">ID</span>
-          <span class="px-3 cursor-pointer hover:bg-gray-300 py-2 rounded-md flex justify-between text-sm">{{ title2 }}</span>
+          <span @click="sortByIdhandler" class="px-3 cursor-pointer hover:bg-gray-300 py-2 rounded-md flex justify-between text-sm">ID</span>
+          <span @click="sortByTitleHandler" class="px-3 cursor-pointer hover:bg-gray-300 py-2 rounded-md flex justify-between text-sm">{{ title2 }}</span>
         </div>
       </div>
-
+      <!-- filtering -->
       <div v-if="progress" class="relative">
         <button
           @click="filterHadnler"
-          class="mr-2 cursor-pointer hover:bg-gray-100 rounded-t-md transition ease-in delay-75 h-8 transition text-center px-4"
+          class="mr-2 cursor-pointer hover:bg-gray-100 rounded-t-md  transition ease-in delay-75 h-8 transition text-center px-4"
+          :class="[completedBtn ? 'border-b-2  border-green-500' : '', IncompletedBtn ? 'border-b-2  border-red-500' : '']"
         >
           Filter by<i class="mdi" :class="filterBtn?'mdi-chevron-up ':'mdi-chevron-down'"></i>
         </button>
@@ -40,10 +38,12 @@
           class="bg-gray-200 absolute z-20 w-28 p-1 rounded-md shadow-lg content"
         >
           <span
+          @click="completed"
             class="px-3 cursor-pointer hover:bg-gray-300 py-2 rounded-md flex justify-between text-sm"
             >Completed</span
           >
           <span
+          @click="incompleted"
             class="px-3 cursor-pointer hover:bg-gray-300 py-2 rounded-md flex justify-between text-sm"
             >Incomplete</span
           >
@@ -84,11 +84,15 @@ import { useRouter } from "vue-router";
 import { ref , computed } from "vue";
 const router = useRouter();
 const props = defineProps(["progress","completeTask","incompleteTask"]);
+const emits = defineEmits(["completedTask","AllItemEvent","sortById","sortByTitle"])
+
 const title1 = ref("");
 const title2 = ref("")
 const sortBtn = ref(false);
 const filterBtn = ref(false);
-
+const completedBtn = ref(false);
+const IncompletedBtn = ref(false);
+// the graph for complete and incomplete tasks
 const fillWidth = computed(() =>
   `${(props.completeTask / (props.completeTask + props.incompleteTask)) * 100}%`
 );
@@ -112,7 +116,31 @@ const sort = () => {
 const filterHadnler = () => {
   filterBtn.value = !filterBtn.value;
 }
-
+const completed = () => {
+  emits("completedTask",true);
+  completedBtn.value = true;
+  IncompletedBtn.value=false;
+  filterBtn.value = false;
+}
+const incompleted = () => {
+  emits("completedTask",false);
+  IncompletedBtn.value=true;
+  completedBtn.value = false;
+  filterBtn.value = false;
+}
+const AllItemHandler = () => {
+ emits("AllItemEvent",true);
+  completedBtn.value =false;
+  IncompletedBtn.value =false;
+}
+const sortByIdhandler = () => {
+  emits('sortById', 'id');
+  sortBtn.value = false;
+}
+const sortByTitleHandler = () => {
+  emits('sortByTitle', 'title');
+  sortBtn.value = false;
+}
 </script>
 
 <style scoped>

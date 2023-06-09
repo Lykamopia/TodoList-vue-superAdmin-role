@@ -6,17 +6,18 @@ import Dialog from "./Dialog/Dialog.vue";
 import SkeletonLoader from "./Loader/SkeletonLoader.vue";
 import Title from "./Header/Title.vue";
 import { useGraphQLStore } from "../store/GraphQlStore";
-import { useMutation } from "@vue/apollo-composable";
 const graphqlStore = useGraphQLStore();
 const { result , error ,loading ,refetch} = graphqlStore.fetchedData;
 
 const fetchedValue = ref([]);
+const ProgressFilterdArray = ref([]);
 const addBtnClicked = ref(false);
 const TotalNumber = ref("");
 const searchText = ref("");
 const optionButton = ref(false);
 const userInputs = ref('');
 const modalType = ref('');
+
 const showModal = () => {
   addBtnClicked.value = !addBtnClicked.value;
 };
@@ -37,26 +38,50 @@ const handleOptionEvent = (data) => {
     optionButton.value = !optionButton.value;
   }
 };
-onMounted(() => {
-      refetch();
-    });
+// onMounted(() => {
+//       refetch();
+//     });
 watchEffect(() => {
   if (result?.value?.users) {
     fetchedValue.value = result?.value?.users;
     graphqlStore.setFetchedResult(fetchedValue.value);
     TotalNumber.value = fetchedValue.value.length;
+    ProgressFilterdArray.value = fetchedValue.value;
   }
 });
 const filteredItems = computed(() => {
   if (searchText.value) {
     const lowercaseSearchText = searchText.value.toLowerCase();
-    return fetchedValue.value.filter((item) =>
+    return ProgressFilterdArray.value.filter((item) =>
       item.name.toLowerCase().startsWith(lowercaseSearchText)
     );
   } else {
-    return fetchedValue.value;
+    return ProgressFilterdArray.value;
   }
 });
+
+// sorting by todo id
+
+const sortById = (data) => {
+  if (data === 'id') {
+    const sortedArray = ProgressFilterdArray.value.slice().sort((a, b) => a.id - b.id);
+    console.log(sortedArray)
+    ProgressFilterdArray.value = sortedArray;
+    return sortedArray;
+  }
+};
+
+// sorting by todo title
+
+const sortByTitle = (data) => {
+  if (data === 'title') {
+    const sortedArray = ProgressFilterdArray.value.slice().sort((a, b) => a.name.localeCompare(b.name));
+    console.log(sortedArray)
+    ProgressFilterdArray.value = sortedArray;
+    return sortedArray;
+  }
+}
+
 
 const reload = () => {
   location.reload();
@@ -67,9 +92,9 @@ const reload = () => {
   <div class="flex justify-center">
     <Header @filter="handleSearchEvent" :totalCount="TotalNumber" type="Users" :progress="false"/>
     <div
-      class="border rounded-lg shadow-md text-black bg-body h-fit min-h-max container absolute z-10 top-32"
+      class="border rounded-lg shadow-md text-black bg-body container absolute z-10 top-32"
     >
-      <Title @showModal="addTriger" :progress="false"/>      
+      <Title @showModal="addTriger" :progress="false" @sortById="sortById" @sortByTitle="sortByTitle"/>      
       <div v-if="loading" class="w-full h-56 flex flex-col justify-center align-center">
         <SkeletonLoader class="w-full mt-2" />
         <SkeletonLoader class="w-full h-36 mt-2" />
@@ -80,8 +105,8 @@ const reload = () => {
         <SkeletonLoader class="w-full h-36 mt-2" />
         <SkeletonLoader class="w-full h-36 mt-2" />
       </div>
-      <div v-else-if="error" class="flex justify-center items-center text-red-900">Something went wrong   <i @click="reload" class="mdi mdi-refresh text-4xl cursor-pointer text-black border m-4 rounded-md hover:bg-blue-100 text-center px-12"></i></div>
-      <div v-else-if="filteredItems.length == 0" class="text-red-700 p-40 text-xl text-center font-bold">The User is Not Found!</div>
+      <div v-else-if="error" class="flex justify-center items-center text-red-900">Something went wrong   <i @click="reload" class="mdi mdi-refresh text-4xl cursor-pointer text-black border m-4 rounded-md hover:bg-gray-100 text-center px-12"></i></div>
+      <div v-else-if="filteredItems.length == 0" class="text-red-700 p-9 text-xl text-center font-bold">User Not Found!</div>
       <div v-else>
         <div v-for="(single, index) in filteredItems" :key="index" class="relative">
         <router-link :to="{ name: 'TodoList', params: { id: single.id } }">
@@ -98,8 +123,5 @@ const reload = () => {
 <style scoped>
 .container {
   width: 80%;
-}
-span.active {
-  color: red;
 }
 </style>

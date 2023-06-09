@@ -53,7 +53,7 @@ const modalType = ref('');
 watchEffect(() => {
   if (result.value?.users) {
     fetchedValue.value = result.value.users;
-    graphqlStore.setFetchedResult(fetchedValue.value);
+    // graphqlStore.setFetchedResult(fetchedValue.value);
   }
 });
 

@@ -90,17 +90,22 @@ import {
 import { useGraphQLStore } from "../../store/GraphQlStore";
 import { useMutation } from "@vue/apollo-composable";
 const graphqlStore = useGraphQLStore();
+const { result , error ,loading ,refetch} = graphqlStore.fetchedData;
 const UPDATE_USER = graphqlStore.updatedUser;
+const INSERT_USER = graphqlStore.insertedData;
+const UPDATE_TODO = graphqlStore.updateTodo;
+const INSERT_TODO = graphqlStore.insertTodo;
 const { mutate: updateUsers } = useMutation(UPDATE_USER);
-const { mutate: insertUsers } = useMutation(graphqlStore.insertedData);
-const { mutate: insertTodos } = useMutation(graphqlStore.insertTodo);
-const { mutate: updateTodos } = useMutation(graphqlStore.updateTodo);
+const { mutate: insertUsers } = useMutation(INSERT_USER);
+const { mutate: insertTodos } = useMutation(INSERT_TODO);
+const { mutate: updateTodos } = useMutation(UPDATE_TODO);
 
 const isOpen = ref(false)
 const sendToApp = ref(true);
 const inputUsername = ref('');
 const inputId = ref('');
 const inputProgress = ref('');
+const insertedUser = ref(null);
 const props = defineProps(['Open','totalCount',"progress","type","id"]);  
 watch(() => props.Open, (newVal) => {
       if (newVal) {
@@ -127,14 +132,19 @@ function closeModal() {
 const addInput = () =>{
   //adding users
   if(props.type === 'Add' && !props.progress){
-    // graphqlStore.addUser(inputUsername.value)
     insertUsers({
     "name" : inputUsername.value,
-  }).then((result) => {
-      console.log("User added:", result.data.insert_users_one);
-    }).catch((error) => {
-      console.error("Error adding user:", error);
-    });
+  })
+    //   let lastId = -1;
+    //   for (let i = 0; i < result.value.users.length; i++) {
+    //     const currentItem = result.value.users[i];
+    //     if (currentItem.id > lastId) {
+    //       lastId = currentItem.id;
+    //     }
+    //   }
+    // const updatedUsers = [...result.value.users, {id:lastId +1, name: inputUsername.value }];
+    // result.value = { ...result.value, users: updatedUsers };
+
     console.log("This is from users header Add btn");
   }
   // updating users
@@ -148,12 +158,12 @@ const addInput = () =>{
           idd: newId,
           name: newName
         })
-    .then((result) => {
-      console.log("User updated:", result.data.update_users_by_pk);
-    })
-    .catch((error) => {
-      console.error("Error updating user:", error);
-    });
+    // .then((result) => {
+    //   console.log("User updated:", result.data.update_users_by_pk);
+    // })
+    // .catch((error) => {
+    //   console.error("Error updating user:", error);
+    // });
   }
 // updating todos
   else if(props.type === 'Edit' && props.progress){
@@ -166,13 +176,13 @@ const addInput = () =>{
           title: newName,
           completed : inputProgress.value
         })
-    .then((result) => {
-      console.log("todo updated:", result.data.update_todos_by_pk);
-    })
-    .catch((error) => {
-      console.error("Error updating todo:", error);
-    });
-      console.log("This is from todos edit button with todo id "+id)
+    // .then((result) => {
+    //   console.log("todo updated:", result.data.update_todos_by_pk);
+    // })
+    // .catch((error) => {
+    //   console.error("Error updating todo:", error);
+    // });
+    //   console.log("This is from todos edit button with todo id "+id)
   }
 // inserting todos
   else if(props.type === 'Add' && props.progress){

@@ -118,12 +118,13 @@ export const useGraphQLStore = defineStore("graphql", {
         }
       }
     `
-    const { result, error, loading } = useQuery(query);
+    const { result, error, loading ,refetch} = useQuery(query);
     this.setFetchedResult(result?.value?.users);
     return {
       result,
       error,
-      loading
+      loading,
+      refetch
     };
   },
     insertedData: () => gql`

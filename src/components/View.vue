@@ -1,6 +1,6 @@
 <script setup>
 import UserList from "./Users/UserList.vue";
-import { watchEffect ,ref, computed } from "vue";
+import { watchEffect ,ref, computed ,onMounted} from "vue";
 import Header from "./Header/Header.vue";
 import Dialog from "./Dialog/Dialog.vue";
 import SkeletonLoader from "./Loader/SkeletonLoader.vue";
@@ -8,7 +8,7 @@ import Title from "./Header/Title.vue";
 import { useGraphQLStore } from "../store/GraphQlStore";
 import { useMutation } from "@vue/apollo-composable";
 const graphqlStore = useGraphQLStore();
-const { result , error ,loading} = graphqlStore.fetchedData;
+const { result , error ,loading ,refetch} = graphqlStore.fetchedData;
 
 const fetchedValue = ref([]);
 const addBtnClicked = ref(false);
@@ -37,10 +37,14 @@ const handleOptionEvent = (data) => {
     optionButton.value = !optionButton.value;
   }
 };
+onMounted(() => {
+      refetch();
+    });
 watchEffect(() => {
   if (result?.value?.users) {
+    // result?.value?.users.push({id: 2000,username: ''})
     fetchedValue.value = result?.value?.users;
-    graphqlStore.setFetchedResult(fetchedValue.value);
+    // graphqlStore.setFetchedResult(fetchedValue.value);
     TotalNumber.value = fetchedValue.value.length;
   }
 });

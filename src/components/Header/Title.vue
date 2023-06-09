@@ -9,14 +9,14 @@
     <span class="flex text-gray-500">
       <button
       @click="AllItemHandler"
-        class="ml-12 mr-2 h-8 rounded-t-md hover:bg-gray-100 transition ease-in delay-75 cursor-pointer text-center px-4"
+        class="ml-12 mr-2 h-fit rounded-t-md hover:bg-gray-100 transition ease-in delay-75 cursor-pointer text-center px-4"
         :class="(!completedBtn && !IncompletedBtn)? 'border-b-2 border-primaryNavColor' : ''"
       >
         All {{ title1 }}s
       </button>
       <div v-if="sortBtn || filterBtn" @click="sortBtn = false, filterBtn=false"  class="fixed w-screen z-20 h-screen left-0 top-0"></div>
       <div class="relative">
-        <button @click="sort" class="mr-2 cursor-pointer hover:bg-gray-100 rounded-t-md transition ease-in delay-75 h-8 transition text-center px-4">
+        <button @click="sort" class="mr-2 cursor-pointer hover:bg-gray-100 rounded-t-md transition ease-in delay-75 h-fit transition text-center px-4">
           sort by<i class="mdi" :class="sortBtn?'mdi-chevron-up ':'mdi-chevron-down'"></i>
         </button>
         <div v-if="sortBtn" class="bg-gray-200 absolute z-20 w-28 p-1 rounded-md shadow-lg content">
@@ -28,7 +28,7 @@
       <div v-if="progress" class="relative">
         <button
           @click="filterHadnler"
-          class="mr-2 cursor-pointer hover:bg-gray-100 rounded-t-md  transition ease-in delay-75 h-8 transition text-center px-4"
+          class="mr-2 cursor-pointer hover:bg-gray-100 rounded-t-md  transition ease-in delay-75 h-fit transition text-center px-4"
           :class="[completedBtn ? 'border-b-2  border-green-500' : '', IncompletedBtn ? 'border-b-2  border-red-500' : '']"
         >
           Filter by<i class="mdi" :class="filterBtn?'mdi-chevron-up ':'mdi-chevron-down'"></i>
@@ -53,26 +53,28 @@
     </span>
     <button
       @click="$emit('showModal', true)"
-      class="bg-primaryNavColor rounded-full text-white px-4 relative w-32 text-left"
+      class="bg-primaryNavColor rounded-full text-white px-2 relative w-24 text-center"
+      @mouseenter="isHovered = true" @mouseleave="isHovered = false" 
     >
-      <b class="text-4xl">+</b
-      ><span class="absolute top-2 right-4">Add {{ title1 }}</span>
+      <b class="text-4xl">+</b>
+      <span v-if="isHovered" class="absolute -top-7 rounded-md  bg-gray-800 text-white font-bold text-sm right-0 w-24">Add {{ title1 }}</span>
     </button>
   </div>
-  <span class="flex mt-2 bg-gray-400 w-full h-2 " :class="progress?'bg-gray-400':'bg-transparent'">
-        <div class="anim bg-green-600 h-2  rounded-r-md" :style="{ width: fillWidth }"></div>
-        <div class="anim2 bg-red-600 h-2 rounded-l-md" :style="{ width: fillWidth2 }"></div>
+  <span class="flex mt-2 bg-white w-full h-2 " :class="progress?'bg-gray-400':'bg-transparent'">
+        <div class="anim bg-green-600 h-2  rounded-l-md" :style="{ width: fillWidth }" :title="props.completeTask"></div>
+        <div class="anim2 bg-red-600 h-2 rounded-r-md" :style="{ width: fillWidth2 }" :title="props.incompleteTask"></div>
   </span>
+
   <ul class="flex justify-between  bg-gray-200 py-3 px-4 font-bold">
     <li class="w-1/12 text-left">#</li>
     <li class="w-5/12 text-left flex">
-      {{}} <i class="mdi text-xl" :class="progress? 'mdi-checkbox-marked-circle-auto-outline' : 'mdi-account-circle-outline' "></i> 
+      {{progress? 'Task' : 'User'}} <i class="mdi text-xl" :class="progress? 'mdi-checkbox-marked-circle-auto-outline' : 'mdi-account-circle-outline' "></i> 
     </li>
     <li class="w-1/5 text-left">ID</li>
-    <li v-if="progress" class="w-1/5 relative text-left">
-      Progress <i class="mdi mdi-progress-check text-xl"></i> <i class="mdi mdi-circle-small text-5xl absolute right-0 -top-3"></i>
+    <li v-if="progress" class="w-1/5 relative text-left ">
+      Progress <i class="mdi mdi-progress-check text-xl"></i> 
     </li>
-    <li class="w-1/5 flex justify-end">
+    <li class="w-1/5 flex justify-end flex-wrap">
       Option <i class="mdi mdi-cog ml-2 text-xl"></i> 
     </li>
   </ul>
@@ -92,6 +94,7 @@ const sortBtn = ref(false);
 const filterBtn = ref(false);
 const completedBtn = ref(false);
 const IncompletedBtn = ref(false);
+const isHovered = ref(false);
 // the graph for complete and incomplete tasks
 const fillWidth = computed(() =>
   `${(props.completeTask / (props.completeTask + props.incompleteTask)) * 100}%`

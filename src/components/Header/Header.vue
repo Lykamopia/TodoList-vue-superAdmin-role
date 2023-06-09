@@ -1,8 +1,8 @@
 <template>
   <nav
-    class="h-56 bg-primaryNavColor w-full justify-between flex pl-16 relative flex-wrap"
+    class="h-44 bg-primaryNavColor w-full justify-evenly flex relative flex-wrap"
   >
-    <div class="flex">
+    <div class="flex h-fit">
       <h1 class="text-3xl font-bold">{{ type }}</h1>
       <div class="mx-16 mt-2 relative">
         <button>
@@ -19,20 +19,23 @@
         />
       </div>
     </div>
-    <h1 class="text-4xl font-bold -mt-8">To-do List</h1>
-    <h1 class="text-countColor text-sm -mt-8">Total: {{ totalCount }} {{ type }}</h1>
-    <div v-if="progress">
+    <div class="h-fit">
+    <h1 class="text-4xl font-bold">To-do List</h1>
+    <h1 class="text-countColor text-sm">Total: {{ totalCount }} {{ type }}</h1>
+  </div>
+    <div v-if="progress" class="h-fit">
     <i class="mdi mdi-bell-badge text-xl mx-3 cursor-pointer"></i>
     <i class="mdi mdi-email text-xl cursor-pointer"></i>
-    <i @mouseenter="isHovered = true" @mouseleave="isHovered = false"  class="mdi mdi-account-circle text-xl ml-3 mr-1 cursor-pointer"></i> <span class="font-sans font-thin">{{ accountName }}</span> 
-
-    <div v-if="isHovered" class="relative bg-white h-24 z-40 transition ease-in-out duration-300 rounded-lg shadow-lg">
+    <i @mouseenter="isHovered = true" @mouseleave="isHovered = false"  class="mdi mdi-account-circle text-xl ml-3 mr-1 cursor-pointer"></i> <span class="font-sans font-thin">{{ accountName }} </span> 
+    <div v-if="isHovered" class="relative">
+      <div  class=" absolute bg-white h-26 z-40 transition ease-in-out duration-300 rounded-lg shadow-lg">
         <div class="m-2 flex flex-wrap cursor-pointer rounded-t-md  text-left">
             <i class="mdi mdi-account-badge-outline text-6xl w-fit text-blue-900  cursor-pointer"></i>
             <span class="font-sans font-bold text-xl text-gray-700">{{ props.accountName }}</span>
             <span class="text-gray-700 text-sm  absolute right-4 top-8">@id: {{props.accountId}}</span>
         </div>
             <span class="font-sans text-md m-2 text-gray-600 ml-12 text-center font-medium">Stay safe</span>
+    </div>
     </div>
 
   </div>
@@ -41,8 +44,6 @@
 
 <script setup>
 import { ref } from "vue";
-import { useGraphQLStore } from "../../store/GraphQlStore";
-const graphqlStore = useGraphQLStore();
 
 const props = defineProps(["totalCount", "type","name","progress","accountName","accountId"]);
 const searchText = ref("");
@@ -56,6 +57,6 @@ const searchEvent = () => {
 <style scoped>
 nav {
   width: 100%;
-  padding: 40px 60px;
+  padding: 20px 30px;
 }
 </style>

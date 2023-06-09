@@ -8,13 +8,13 @@
         {{ name }}
       </li>
       <li class="w-1/5 text-left">{{ id }}</li>
-      <li v-if="progress" class="w-1/5 text-left relative">
+      <div v-if="progress" class="w-1/5 flex justify-between flex-wrap">
+        <li>
         {{ complete ? "Completed" : "Not Completed" }}
-        <i
-          class="mdi mdi-circle-small text-5xl absolute right-0 -top-3"
-          :class="complete ? 'text-green-600' : 'text-red-600'"
-        ></i>
       </li>
+      <i class="mdi mdi-circle-small text-5xl text-right" :class="complete ? 'text-green-600' : 'text-red-600'"></i>
+      </div>
+      
       <li
         @click="optionEvent"
         class="cursor-pointer w-1/5 flex justify-end pr-3 relative"

@@ -96,8 +96,10 @@ const INSERT_USER = graphqlStore.insertedData;
 const UPDATE_TODO = graphqlStore.updateTodo;
 const INSERT_TODO = graphqlStore.insertTodo;
 const { mutate: updateUsers } = useMutation(UPDATE_USER);
-const { mutate: insertUsers } = useMutation(INSERT_USER
-,{
+const { mutate: updateTodos } = useMutation(UPDATE_TODO);
+
+// inserting and caching a new user
+const { mutate: insertUsers } = useMutation(INSERT_USER,{
         update: (cache, { data }) => {
           const existingData = cache.readQuery({
             query:  graphqlStore.fetchedQuery,
@@ -117,6 +119,7 @@ const { mutate: insertUsers } = useMutation(INSERT_USER
         },
       }
       );
+      // insering and caching a new todo 
 const { mutate: insertTodos } = useMutation(INSERT_TODO,{
         update: (cache, { data }) => {
           const existingData = cache.readQuery({
@@ -145,7 +148,7 @@ const { mutate: insertTodos } = useMutation(INSERT_TODO,{
           });
         },
       });
-const { mutate: updateTodos } = useMutation(UPDATE_TODO);
+
 
 const isOpen = ref(false)
 const sendToApp = ref(true);
@@ -170,7 +173,6 @@ watch(() => props.Open, (newVal) => {
         inputId.value = '';       
       }
     });
-// 
 
 const emits = defineEmits(['closeModal','userInput'])
 function closeModal() {

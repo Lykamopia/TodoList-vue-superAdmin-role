@@ -3,9 +3,10 @@ import UserList from "./Users/UserList.vue";
 import { watchEffect ,ref, computed ,onMounted} from "vue";
 import Header from "./Header/Header.vue";
 import Dialog from "./Dialog/Dialog.vue";
-import SkeletonLoader from "./Loader/SkeletonLoader.vue";
 import Title from "./Header/Title.vue";
 import { useGraphQLStore } from "../store/GraphQlStore";
+import { ListLoader } from 'vue-content-loader';
+
 const graphqlStore = useGraphQLStore();
 const { result , error ,loading ,refetch} = graphqlStore.fetchedData;
 
@@ -89,23 +90,16 @@ const reload = () => {
 
 </script>
 <template>
-  <div class="flex justify-center">
+  <div class="flex justify-center flex-wrap">
     <Header @filter="handleSearchEvent" :totalCount="TotalNumber" type="Users" :progress="false"/>
     <div
-      class="border rounded-lg shadow-md text-black bg-body container absolute z-10 top-32"
+      class=" border rounded-lg drop-shadow-md text-black bg-body container z-10 -mt-9 "
     >
       <Title @showModal="addTriger" :progress="false" @sortById="sortById" @sortByTitle="sortByTitle"/>      
       <div v-if="loading" class="w-full h-56 flex flex-col justify-center align-center">
-        <SkeletonLoader class="w-full mt-2" />
-        <SkeletonLoader class="w-full h-36 mt-2" />
-        <SkeletonLoader class="w-full h-36 mt-2" />
-        <SkeletonLoader class="w-full h-36 mt-2" />
-        <SkeletonLoader class="w-full h-36 mt-2" />
-        <SkeletonLoader class="w-full h-36 mt-2" />
-        <SkeletonLoader class="w-full h-36 mt-2" />
-        <SkeletonLoader class="w-full h-36 mt-2" />
+        <ListLoader :list-style="'rows'" :row="6" :row-width="[800, 850, 700,750,600,650]" />
       </div>
-      <div v-else-if="error" class="flex justify-center items-center text-red-900">Something went wrong   <i @click="reload" class="mdi mdi-refresh text-4xl cursor-pointer text-black border m-4 rounded-md hover:bg-gray-100 text-center px-12"></i></div>
+      <div v-else-if="error" class="flex justify-center items-center text-red-900"><i class="mdi mdi-alert-circle-outline text-4xl text-red-700 mx-4"></i> Something went wrong   <i @click="reload" class="mdi mdi-refresh text-4xl cursor-pointer text-black border m-4 rounded-md hover:bg-gray-100 text-center px-12"></i></div>
       <div v-else-if="filteredItems.length == 0" class="text-red-700 p-9 text-xl text-center font-bold">User Not Found!</div>
       <div v-else>
         <div v-for="(single, index) in filteredItems" :key="index" class="relative">

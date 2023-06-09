@@ -1,15 +1,27 @@
 import { defineStore } from "pinia";
 import { gql } from "graphql-tag";
-import { useQuery ,useMutation } from "@vue/apollo-composable";
+import { useQuery} from "@vue/apollo-composable";
 
 export const useGraphQLStore = defineStore("graphql", {
   state: () => ({
     fetchedResult : [],
     loading : false,
     error : false,
-    isInitialized: false,
     id : 0,
-    name : ''
+    name : '',
+    completed : '',
+    fetchedQuery : gql` query MyQuery @cached {
+       users {
+         id
+         name
+         todos {
+           completed
+           id
+           title
+         }
+       }
+     }
+   `,
   }),
   actions: {
     setId(id){
@@ -17,6 +29,9 @@ export const useGraphQLStore = defineStore("graphql", {
     },
     setName(name){
       this.name = name;
+    },
+    setCompleted(complete){
+      this.completed = complete;
     },
     setFetchedResult(value) {
       this.fetchedResult = value;
@@ -26,83 +41,7 @@ export const useGraphQLStore = defineStore("graphql", {
     },
     setError(value) {
       this.error = value;
-    },
-    // deleteUser(id) {
-    //   const REMOVE_USER = this.deletedData;
-    //   const { mutate } = useMutation(REMOVE_USER, {
-    //     variables: {
-    //       id: id,
-    //     },
-    //     update: (cache, data ) => {
-    //       if (id.trim() !== '') {
-    //         const existingData = cache.readQuery({
-    //           query: this.fetchedResult,
-    //         });
-    //         const updatedData = {
-    //           users: existingData.users.filter((user) => user.id !== id),
-    //         };
-    //         cache.writeQuery({
-    //           query: this.fetchedResult,
-    //           data: updatedData,
-    //         });
-    //       }
-    //     },
-    //   });
-    //   return mutate;
-    // },
-    // updateUsering(id, idd,name) {
-    //   const UPDATE_USER = this.updatedUser;
-    //   const { mutate } = useMutation(UPDATE_USER, {
-    //     variables: {
-    //       id: id,
-    //       idd: idd,
-    //       name: name,
-    //     },
-    //     update: (cache, { data }) => {
-    //       if (props.id.trim() !== '' && props.userInputs.name.trim() !== '') {
-    //         const existingData = cache.readQuery({
-    //           query: this.fetchedResult,
-    //         });
-    //         const updatedData = {
-    //           users: existingData.users,
-    //         };
-    //         cache.writeQuery({
-    //           query: this.fetchedResult,
-    //           data: updatedData,
-    //         });
-    //       }
-    //     },
-    //   });
-
-    //   return mutate;
-    // },
-    // addUser(name) {
-    //   const INSERT_USER = this.insertedData;
-    //   const { mutate  } = useMutation(INSERT_USER, {
-    //     variables: {
-    //       name: name,
-    //     },
-    //     update: (cache, { data }) => {
-    //       const existingData = cache.readQuery({
-    //         query: this.fetchedData,
-    //       });
-    //       const newUser = {
-    //         id: data.insert_users_one.id,
-    //         name: data.insert_users_one.name,
-    //         todos: [],
-    //       };
-    //       const updatedData = {
-    //         users: [...existingData.users, newUser],
-    //       };
-    //       cache.writeQuery({
-    //         query: this.fetchedData,
-    //         data: updatedData,
-    //       });
-    //     },
-    //   });
-    //   return mutate;
-    // },
- 
+    }, 
   },
   getters : {
     fetchedData () {
@@ -124,9 +63,10 @@ export const useGraphQLStore = defineStore("graphql", {
       result,
       error,
       loading,
-      refetch
+      refetch,
     };
   },
+
     insertedData: () => gql`
        mutation inserUsers($name : String!){
       insert_users_one(object:{
@@ -192,9 +132,6 @@ export const useGraphQLStore = defineStore("graphql", {
       }
     }    
  `,
-  },
-  setters: {
-
   },
 });
 

@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-center">
-    <Header @filter="handleSearchEvent" :totalCount="TotalNumber" type="Task" :progress="true"/>
+    <Header @filter="handleSearchEvent" :totalCount="TotalNumber" type="Task" :progress="true" :accountName="accountName" :accountId="accountId"/>
     <div class="border rounded-lg shadow-md text-black bg-body h-fit min-h-max container absolute z-10 top-32">
       <Title @showModal="addTriger" :progress="true" :completeTask="countCompleted" :incompleteTask="countIncompleted"/>
       <div v-if="loading" class="w-full h-56 flex flex-col justify-center align-center">
@@ -50,11 +50,11 @@ const addBtnClicked = ref(false);
 const countCompleted = ref(0);
 const countIncompleted = ref(0);
 const modalType = ref('');
+const accountName = ref('');
+const accountId = ref('');
 watchEffect(() => {
   if (result.value?.users) {
     fetchedValue.value = result.value.users;
-    // refetch();
-    // graphqlStore.setFetchedResult(fetchedValue.value);
   }
 });
 
@@ -67,8 +67,8 @@ const filteredItems = computed(() => {
         countIncompleted.value = TotalNumber.value - countCompleted.value;
         
         //this is used for account name
-        graphqlStore.setName(item.name);
-        graphqlStore.setId(props.id);
+        accountName.value = item.name;
+        accountId.value = props.id;
       }
    return props.id == item.id
     });
@@ -96,12 +96,6 @@ const handleSearchEvent = (data) => {
 
 const showModal = () => {
   addBtnClicked.value = !addBtnClicked.value;
-  // if (!addBtnClicked.value) {
-  //   addBtnClicked.value = true;
-  // }
-  // else{
-  //   addBtnClicked.value = false;
-  // }
 };
 const editTriger = () => {
   modalType.value = 'Edit';

@@ -28,9 +28,9 @@
 
     <div v-if="isHovered" class="relative bg-white h-24 z-40 transition ease-in-out duration-300 rounded-lg shadow-lg">
         <div class="m-2 flex flex-wrap cursor-pointer rounded-t-md  text-left">
-            <i class="mdi mdi-alpha-a-circle text-6xl w-fit text-black  cursor-pointer"></i>
-            <span class="font-sans font-bold text-xl text-gray-700">{{ accountName }}</span>
-            <span class="text-gray-700 text-sm  absolute right-4 top-8">@id: {{accountId}}</span>
+            <i class="mdi mdi-account-badge-outline text-6xl w-fit text-blue-900  cursor-pointer"></i>
+            <span class="font-sans font-bold text-xl text-gray-700">{{ props.accountName }}</span>
+            <span class="text-gray-700 text-sm  absolute right-4 top-8">@id: {{props.accountId}}</span>
         </div>
             <span class="font-sans text-md m-2 text-gray-600 ml-12 text-center font-medium">Stay safe</span>
     </div>
@@ -44,11 +44,9 @@ import { ref } from "vue";
 import { useGraphQLStore } from "../../store/GraphQlStore";
 const graphqlStore = useGraphQLStore();
 
-const props = defineProps(["totalCount", "type","name","progress"]);
+const props = defineProps(["totalCount", "type","name","progress","accountName","accountId"]);
 const searchText = ref("");
 const isHovered = ref(false);
-const accountName = ref(graphqlStore.name);
-const accountId = ref(graphqlStore.id);
 const  emits  = defineEmits(["filter"]);
 const searchEvent = () => {
   emits("filter", searchText.value);

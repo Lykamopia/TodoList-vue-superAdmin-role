@@ -42,14 +42,13 @@ onMounted(() => {
     });
 watchEffect(() => {
   if (result?.value?.users) {
-    // result?.value?.users.push({id: 2000,username: ''})
     fetchedValue.value = result?.value?.users;
-    // graphqlStore.setFetchedResult(fetchedValue.value);
+    graphqlStore.setFetchedResult(fetchedValue.value);
     TotalNumber.value = fetchedValue.value.length;
   }
 });
 const filteredItems = computed(() => {
-  if (searchText.value != "") {
+  if (searchText.value) {
     const lowercaseSearchText = searchText.value.toLowerCase();
     return fetchedValue.value.filter((item) =>
       item.name.toLowerCase().startsWith(lowercaseSearchText)

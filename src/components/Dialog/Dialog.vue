@@ -12,7 +12,6 @@
       >
         <div class="fixed inset-0 bg-black bg-opacity-25" />
       </TransitionChild>
-
       <div class="fixed inset-0 overflow-y-none">
         <div
           class="flex h-full items-center justify-center p-4 text-center"
@@ -33,22 +32,24 @@
                 as="h3"
                 class="text-xl font-bold leading-6 text-gray-900 flex justify-center mb-8"
               >
-              <i class="mdi text-6xl" :class="type === 'Edit'? 'mdi-account-edit' : 'mdi-account-plus' "></i> <br>  {{type}} User 
-              <!-- account-edit -->
+              <i v-if="!progress" class="mdi text-6xl" :class="type === 'Edit'? 'mdi-account-edit' : 'mdi-account-plus' "></i>  
+              <i v-if="progress" class="mdi text-6xl" :class="type === 'Edit'? 'mdi-circle-edit-outline' : 'mdi-checkbox-marked-circle-plus-outline' "></i> <br> 
+               {{type}}  {{ progress ? 'Task' : 'User' }} 
               </DialogTitle>
               <div class="mt-2 text-gray-500">
                 <span class="flex justify-between">
                   <label v-if="!progress" for="username" class="mt-1 cursor-pointer">User Name </label>
                   <label v-if="progress" for="username" class="mt-1 cursor-pointer">Task</label>
-                <input class=" w-3/4 p-1 outline-none border rounded-md px-2 border-blue-500" type="text" v-model="inputUsername" id="username"> 
+                <input class=" w-3/4 p-1 outline-none border rounded-md px-2 " :class="Inputerror ?'border-red-500 motion-safe:animate-bounce':'border-blue-500'" type="text" v-model="inputUsername" id="username" @input="removeError" @keyup.enter="addInput"> 
                  </span>
                  <span v-if="progress" class="flex justify-between">
                   <label for="progress" class="mt-2 cursor-pointer">Progress </label>
-                  <select v-model="inputProgress" class="w-3/4 p-1 outline-none border rounded h-8 mt-2 border-blue-500 cursor-pointer" name="" id="progress">
+                  <select v-model="inputProgress" class="w-3/4 p-1 outline-none border rounded h-8 mt-2 cursor-pointer" :class="Inputerror ?'border-red-500':'border-blue-500'" name="" id="progress">
                     <option class="border-none" :value="false">In-completed</option>
-                    <option class="" :value="true">Completed</option>
+                    <option class="border-green" :value="true">Completed</option>
                   </select>
                  </span>
+                 <p v-if="Inputerror" class="text-sm text-red-500 text-center">{{ Inputerror }}</p>
                 <p class="text-sm mt-4">
                   <q>The greatest glory in living lies not in never falling, but in rising every time we fall.</q>-Nelson Mandela
                 </p>
@@ -90,31 +91,78 @@ import {
 import { useGraphQLStore } from "../../store/GraphQlStore";
 import { useMutation } from "@vue/apollo-composable";
 const graphqlStore = useGraphQLStore();
-const { result , error ,loading ,refetch} = graphqlStore.fetchedData;
 const UPDATE_USER = graphqlStore.updatedUser;
 const INSERT_USER = graphqlStore.insertedData;
 const UPDATE_TODO = graphqlStore.updateTodo;
 const INSERT_TODO = graphqlStore.insertTodo;
 const { mutate: updateUsers } = useMutation(UPDATE_USER);
-const { mutate: insertUsers } = useMutation(INSERT_USER);
-const { mutate: insertTodos } = useMutation(INSERT_TODO);
+const { mutate: insertUsers } = useMutation(INSERT_USER
+,{
+        update: (cache, { data }) => {
+          const existingData = cache.readQuery({
+            query:  graphqlStore.fetchedQuery,
+          });
+          const newUser = {
+            id: data.insert_users_one.id,
+            name: data.insert_users_one.name,
+            todos: [],
+          };
+          const updatedData = {
+            users: [...existingData.users, newUser],
+          };
+          cache.writeQuery({
+            query: graphqlStore.fetchedQuery,
+            data: updatedData,
+          });
+        },
+      }
+      );
+const { mutate: insertTodos } = useMutation(INSERT_TODO,{
+        update: (cache, { data }) => {
+          const existingData = cache.readQuery({
+            query:  graphqlStore.fetchedQuery,
+          });
+          const newTodo = {
+            id: data.insert_todos_one.id,
+            title: data.insert_todos_one.title,
+            completed: data.insert_todos_one.completed,
+            userid : data.insert_todos_one.userid,
+          };
+          const updatedData = {
+                  users: existingData.users.map(user => {
+                    if (user.id === data.insert_todos_one.userid) {
+                      return {
+                        ...user,
+                        todos: [...user.todos, newTodo],
+                      };
+                    }
+                    return user;
+                  }),
+                };
+          cache.writeQuery({
+            query: graphqlStore.fetchedQuery,
+            data: updatedData,
+          });
+        },
+      });
 const { mutate: updateTodos } = useMutation(UPDATE_TODO);
 
 const isOpen = ref(false)
 const sendToApp = ref(true);
 const inputUsername = ref('');
 const inputId = ref('');
-const inputProgress = ref('');
-const insertedUser = ref(null);
+const inputProgress = ref(false);
+const Inputerror = ref('');
 const props = defineProps(['Open','totalCount',"progress","type","id"]);  
 watch(() => props.Open, (newVal) => {
       if (newVal) {
           isOpen.value = newVal;
       }
-      if(!props.progress &&  props.type === 'Edit' && isOpen.value){
+      if(props.type === 'Edit' && isOpen.value){
         // This is to add previous values into the input fields
             inputUsername.value = graphqlStore.name;
             inputId.value = graphqlStore.id;
+            inputProgress.value = graphqlStore.completed;
       }
       else if(!isOpen.value){
         // When the Dialog closes the input fields reset
@@ -126,24 +174,22 @@ watch(() => props.Open, (newVal) => {
 
 const emits = defineEmits(['closeModal','userInput'])
 function closeModal() {
+  // closing the modal
+  Inputerror.value='';
   isOpen.value = sendToApp.value = false;
   emits('closeModal',sendToApp.value);
 }
 const addInput = () =>{
+  // Validating the inputs
+  if (!inputUsername.value.trim()) {
+    Inputerror.value = '* All input fields are required!';
+        return;
+    }
   //adding users
   if(props.type === 'Add' && !props.progress){
     insertUsers({
     "name" : inputUsername.value,
   })
-      let lastId = -1;
-      for (let i = 0; i < result.value.users.length; i++) {
-        const currentItem = result.value.users[i];
-        if (currentItem.id > lastId) {
-          lastId = currentItem.id;
-        }
-      }
-    const updatedUsers = [...result.value.users, {id:lastId +1, name: inputUsername.value }];
-    result.value = { ...result.value, users: updatedUsers };
     console.log("This is from users header Add btn");
   }
   // updating users
@@ -171,18 +217,11 @@ const addInput = () =>{
   }
 // inserting todos
   else if(props.type === 'Add' && props.progress){
-    // graphqlStore.addUser(inputUsername.value)
     insertTodos({
     "userid": props.id,
     "title" : inputUsername.value,
     "completed" : inputProgress.value
-  }).then((result) => {
-      console.log("todo inserted:", result.data.insert_todos_one);
-    })
-    .catch((error) => {
-      console.error("Error updating todo:", error);
-    });
-    // console.log("This is from todos header Add btn with user id "+props.id,inputUsername.value,inputProgress.value);
+  })
   }
   const inputs = {
     id : inputId.value,
@@ -191,5 +230,8 @@ const addInput = () =>{
   }
   emits('userInput',inputs);
   isOpen.value = false;
+}
+const removeError = () => {
+  Inputerror.value='';
 }
 </script>

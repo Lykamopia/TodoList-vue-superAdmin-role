@@ -7,21 +7,21 @@
       class="mdi mdi-arrow-left absolute text-3xl text-gray-500 hover:bg-gray-100 transition ease-in delay-75 cursor-pointer rounded-full px-1 bottom-1"
     ></i>
     <span class="flex text-gray-500">
-      <h1
+      <button
         class="ml-12 mr-2 h-8 rounded-t-md hover:bg-gray-100 border-b-2 border-primaryNavColor transition ease-in delay-75 cursor-pointer text-center px-4"
       >
         All {{ title1 }}s
-      </h1>
-      <h1
+      </button>
+      <button
         class="mr-2 cursor-pointer hover:bg-gray-100 rounded-t-md transition ease-in delay-75 h-8 transition text-center px-4"
       >
-        New {{ title1 }}
-      </h1>
+        New {{ title1 }}s
+      </button>
       <div v-if="sortBtn || filterBtn" @click="sortBtn = false, filterBtn=false"  class="fixed w-screen z-20 h-screen left-0 top-0"></div>
       <div class="relative">
-        <h1 @click="sort" class="mr-2 cursor-pointer hover:bg-gray-100 rounded-t-md transition ease-in delay-75 h-8 transition text-center px-4">
+        <button @click="sort" class="mr-2 cursor-pointer hover:bg-gray-100 rounded-t-md transition ease-in delay-75 h-8 transition text-center px-4">
           sort by<i class="mdi" :class="sortBtn?'mdi-chevron-up ':'mdi-chevron-down'"></i>
-        </h1>
+        </button>
         <div v-if="sortBtn" class="bg-gray-200 absolute z-20 w-28 p-1 rounded-md shadow-lg content">
           <span class="px-3 cursor-pointer hover:bg-gray-300 py-2 rounded-md flex justify-between text-sm">ID</span>
           <span class="px-3 cursor-pointer hover:bg-gray-300 py-2 rounded-md flex justify-between text-sm">{{ title2 }}</span>
@@ -29,12 +29,12 @@
       </div>
 
       <div v-if="progress" class="relative">
-        <h1
+        <button
           @click="filterHadnler"
           class="mr-2 cursor-pointer hover:bg-gray-100 rounded-t-md transition ease-in delay-75 h-8 transition text-center px-4"
         >
           Filter by<i class="mdi" :class="filterBtn?'mdi-chevron-up ':'mdi-chevron-down'"></i>
-        </h1>
+        </button>
         <div
           v-if="filterBtn"
           class="bg-gray-200 absolute z-20 w-28 p-1 rounded-md shadow-lg content"

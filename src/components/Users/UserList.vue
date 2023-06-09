@@ -52,7 +52,6 @@ import { useMutation } from "@vue/apollo-composable";
 import { useGraphQLStore } from "../../store/GraphQlStore";
 
 const graphqlStore = useGraphQLStore();
-const { result , error ,loading ,refetch} = graphqlStore.fetchedData;
 const props = defineProps(["id", "name","sequence","progress","complete","userInputs"]);
 const emits = defineEmits(["optionsClicked","editEvent","idEvent"]);
 const REMOVE_USER = graphqlStore.deletedData;
@@ -61,23 +60,50 @@ const { mutate: deleteUser } = useMutation(REMOVE_USER,{
     variables : {
     id : props.id
     },
+    update: (cache) => {
+            const existingData = cache.readQuery({
+              query: graphqlStore.fetchedQuery,
+            });
+            const updatedData = {
+              // filtering out the user with its id
+              users: existingData.users.filter((user) => user.id !== props.id),
+            };
+            cache.writeQuery({
+              query: graphqlStore.fetchedQuery,
+              data: updatedData,
+            });
+        },
   })
-  const { mutate: deleteTodos } = useMutation(REMOVE_TODO,{
+const { mutate: deleteTodos } = useMutation(REMOVE_TODO,{
     variables : {
     id : props.id
     },
+    update: (cache) => {
+            const existingData = cache.readQuery({
+              query: graphqlStore.fetchedQuery,
+            });
+            const updatedData = {
+              // filtering out todo with its respective id
+                users: existingData.users.map(user => ({
+                  ...user,
+                  todos: user.todos.filter(todo => todo.id !== props.id),
+                })),
+              };
+            cache.writeQuery({
+              query: graphqlStore.fetchedQuery,
+              data: updatedData,
+            });
+        },
   })
 
  const deleteEventHandler = () => {
+  // deleting todos
   if(props.progress){
     deleteTodos({ variables: { id: props.id } });
   }
+  // deleting user
   else if (!props.progress) {
     deleteUser({ variables: { id: props.id } });
-    refetch();
-    // const itemIdToRemove = props.id; 
-    // const updatedUsers = result.value.users.filter(user => user.id !== itemIdToRemove);
-    // result.value = { ...result.value, users: updatedUsers };
 }
  }
 
@@ -86,12 +112,7 @@ const { mutate: deleteUser } = useMutation(REMOVE_USER,{
   emits("idEvent",props.id);
   graphqlStore.setId(props.id);
   graphqlStore.setName(props.name);
-  if(props.progress){
-    console.log("Edit button is clicked from todos")
-  }
-  else{
-    console.log("Edit button is clicked from users");
-  }
+  graphqlStore.setCompleted(props.complete);
  }
 
   const optionsIsClicked = ref(false);

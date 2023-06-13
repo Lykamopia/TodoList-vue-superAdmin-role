@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-center flex-wrap">
     <Header @filter="handleSearchEvent" :totalCount="TotalNumber" type="Task" :progress="true" :accountName="accountName" :accountId="accountId"/>
-    <div class="border rounded-lg shadow-md text-black bg-body h-fit min-h-max container z-10 -mt-9">
+    <div class="border rounded-lg shadow-md text-black bg-body h-fit min-h-max container z-10 -mt-16">
       <Title @showModal="addTriger" :progress="true" :completeTask="countCompleted" :incompleteTask="countIncompleted" @completedTask="completedTaskFilter" @AllItemEvent="AllItemHandler" @sortById="sortById" @sortByTitle="sortByTitle"/>
       <div v-if="loading" class="w-full h-56 flex flex-col justify-center align-center">
         <ListLoader :list-style="'rows'" :row="6" :row-width="[300, 250, 200,300,250,300]" />

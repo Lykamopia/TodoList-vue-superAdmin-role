@@ -7,7 +7,7 @@
       <li class="w-5/12 text-left font-bold text-gray-700 text-xl">
         {{ name }}
       </li>
-      <li class="w-1/5 text-left ml-8">{{ id }}</li>
+      <li class="w-1/5 text-left">...{{ id }}</li>
       <div v-if="progress" class="w-1/5 flex justify-between flex-wrap">
         <li>
         {{ complete ? "Completed" : "Not Completed" }}

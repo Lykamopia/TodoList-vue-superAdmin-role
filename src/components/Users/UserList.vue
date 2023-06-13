@@ -12,7 +12,7 @@
         <li>
         {{ complete ? "Completed" : "Not Completed" }}
       </li>
-      <i class="mdi mdi-circle-small text-5xl text-right -mt-6" :class="complete ? 'text-green-600' : 'text-red-600'"></i>
+      <i class="mdi mdi-circle-small text-5xl text-right -mt-4" :class="complete ? 'text-green-600' : 'text-red-600'"></i>
       </div>
       
       <li

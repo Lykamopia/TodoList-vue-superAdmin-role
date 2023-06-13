@@ -93,7 +93,7 @@ const reload = () => {
   <div class="flex justify-center flex-wrap">
     <Header @filter="handleSearchEvent" :totalCount="TotalNumber" type="Users" :progress="false"/>
     <div
-      class=" border rounded-lg drop-shadow-md text-black bg-body container z-10 -mt-12 "
+      class=" border rounded-lg drop-shadow-md text-black bg-body container z-10 -mt-24 "
     >
       <Title @showModal="addTriger" :progress="false" @sortById="sortById" @sortByTitle="sortByTitle"/>      
       <div v-if="loading" class="w-full h-56 flex flex-col justify-center align-center">

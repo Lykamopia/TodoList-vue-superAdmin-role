@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="h-48 bg-primaryNavColor w-full justify-evenly flex relative flex-wrap"
+    class="h-60 bg-primaryNavColor w-full justify-evenly flex relative flex-wrap"
   >
     <div class="flex h-fit">
       <h1 class="text-3xl font-bold">{{ type }}</h1>

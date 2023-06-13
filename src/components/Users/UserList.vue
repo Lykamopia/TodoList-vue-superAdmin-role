@@ -4,7 +4,7 @@
       class="flex justify-between py-3 font-sans px-4 hover:bg-gray-100 relative cursor-pointer"
     >
       <li class="w-1/12 text-left">{{ sequence }}</li>
-      <li class="w-5/12 text-left font-bold text-gray-700 text-xl mr-6">
+      <li class="w-5/12 text-left font-bold text-gray-700 text-xl">
         {{ name }}
       </li>
       <li class="w-1/5 text-left">{{ id }}</li>

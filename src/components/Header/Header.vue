@@ -21,7 +21,7 @@
     </div>
     <div class="h-fit">
     <h1 class="text-4xl font-bold">To-do List</h1>
-    <h1 class="text-countColor text-sm ml-3">Total: {{ totalCount }} {{ type }}</h1>
+    <h1 class="text-countColor text-sm ml-2">Total: {{ totalCount }} {{ type }}</h1>
   </div>
     <div v-if="progress" class="h-fit">
     <i class="mdi mdi-bell-badge text-xl mx-3 cursor-pointer"></i>

@@ -34,7 +34,7 @@
         router.push({ name: 'users' });
     }
     else{
-            error.value="* Incorrect username or password"
+        error.value="* Incorrect username or password"
     }
   };
   </script>

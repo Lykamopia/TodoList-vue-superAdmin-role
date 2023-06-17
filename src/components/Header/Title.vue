@@ -53,16 +53,21 @@
     </span>
     <button
       @click="$emit('showModal', true)"
-      class="bg-primaryNavColor rounded-full text-white px-2 relative w-24 text-center"
+      class="bg-primaryNavColor rounded-full text-white px-2 relative w-24 text-center mb-1"
       @mouseenter="isHovered = true" @mouseleave="isHovered = false" 
     >
       <b class="text-4xl">+</b>
       <span v-if="isHovered" class="absolute -top-7 rounded-md  bg-gray-800 text-white font-bold text-sm right-0 w-24">Add {{ title1 }}</span>
     </button>
   </div>
-  <span class="flex mt-2 bg-white w-full h-2 " :class="progress?'bg-gray-400':'bg-transparent'">
-        <div class="anim bg-green-600 h-2  rounded-l-md" :style="{ width: fillWidth }" :title="props.completeTask"></div>
-        <div class="anim2 bg-red-600 h-2 rounded-r-md" :style="{ width: fillWidth2 }" :title="props.incompleteTask"></div>
+
+  <span v-if="progress" class="flex  bg-white w-full h-2 mt-6 relative" :class="progress?'bg-gray-400':'bg-transparent'">
+        <div class="anim bg-green-600 h-2  rounded-l-md" :style="{ width: fillWidth + '%' }" title="completed Tasks">
+          <span v-if="!loading && !isNaN(fillWidth) && (fillWidth != 0)" class="absolute text-xs text-gray-400 ml-6 -top-5 ">{{ Math.round(fillWidth) + '%' }} Completed</span>
+        </div>
+        <div class="anim2 bg-red-600 h-2 rounded-r-md" :style="{ width: fillWidth2 + '%' }" title="Incompleted Tasks">
+              <span v-if="!loading && !isNaN(fillWidth) && (fillWidth2 != 0)" class="absolute text-xs text-gray-400 ml-6 -top-5 ">{{ Math.round(fillWidth2) + '%' }} Incompleted</span>
+        </div>
   </span>
 
   <ul class="flex justify-between  bg-gray-200 py-3 px-4 font-bold">
@@ -84,6 +89,9 @@
 <script setup>
 import { useRouter } from "vue-router";
 import { ref , computed } from "vue";
+import { useGraphQLStore } from "../../store/GraphQlStore";
+const { loading } = useGraphQLStore().fetchedData;
+
 const router = useRouter();
 const props = defineProps(["progress","completeTask","incompleteTask"]);
 const emits = defineEmits(["completedTask","AllItemEvent","sortById","sortByTitle"])
@@ -95,12 +103,13 @@ const filterBtn = ref(false);
 const completedBtn = ref(false);
 const IncompletedBtn = ref(false);
 const isHovered = ref(false);
+
 // the graph for complete and incomplete tasks
 const fillWidth = computed(() =>
-  `${(props.completeTask / (props.completeTask + props.incompleteTask)) * 100}%`
+  `${(props.completeTask / (props.completeTask + props.incompleteTask)) * 100}`
 );
 const fillWidth2 = computed(() =>
-  `${(props.incompleteTask / (props.completeTask + props.incompleteTask)) * 100}%`
+  `${(props.incompleteTask / (props.completeTask + props.incompleteTask)) * 100}`
 );
 
 if (props.progress) {

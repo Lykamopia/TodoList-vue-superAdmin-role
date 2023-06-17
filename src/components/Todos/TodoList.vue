@@ -37,7 +37,7 @@ import { useGraphQLStore } from "../../store/GraphQlStore";
 import { ListLoader } from 'vue-content-loader';
 
 const graphqlStore = useGraphQLStore();
-const { result , error ,loading,refetch} = graphqlStore.fetchedData;
+const { result , error ,loading} = graphqlStore.fetchedData;
 const props = defineProps(['id']);
 const fetchedValue = ref([]);
 const TotalNumber = ref(0);
@@ -99,7 +99,6 @@ const completedTaskFilter = (data) => {
         ProgressFilterdArray.value = item.todos.filter((todo) => todo.completed);
       }
     });
-    console.log(ProgressFilterdArray.value[0]);
   }
   else{
     isProgressFilterd.value = false;
@@ -108,7 +107,6 @@ const completedTaskFilter = (data) => {
         ProgressFilterdArray.value = item.todos.filter((todo) => !todo.completed);
       }
     });
-    console.log(ProgressFilterdArray.value);
   }
 }
 

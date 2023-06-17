@@ -187,14 +187,13 @@ const addInput = () =>{
     Inputerror.value = '* All input fields are required!';
         return;
     }
-  //adding users
+  //adding users from Users Header Add Btn
   if(props.type === 'Add' && !props.progress){
     insertUsers({
     "name" : inputUsername.value,
   })
-    console.log("This is from users header Add btn");
   }
-  // updating users
+  // updating users from Users Edit Btn
   else if(props.type === 'Edit' && !props.progress){
   console.log("This is from Users edit button")
   const id = parseInt(graphqlStore.id, 10);
@@ -206,10 +205,9 @@ const addInput = () =>{
           name: newName
         })
   }
-// updating todos
+// updating todos from Todos Edit Btn
   else if(props.type === 'Edit' && props.progress){
   const id = parseInt(graphqlStore.id, 10);
-  const newId = parseInt(inputId.value);
   const newName = inputUsername.value;
   updateTodos({
           oldid: id,
@@ -217,7 +215,7 @@ const addInput = () =>{
           completed : inputProgress.value
         })
   }
-// inserting todos
+// inserting todos 
   else if(props.type === 'Add' && props.progress){
     insertTodos({
     "userid": props.id,

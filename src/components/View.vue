@@ -97,7 +97,7 @@ const reload = () => {
     >
       <Title @showModal="addTriger" :progress="false" @sortById="sortById" @sortByTitle="sortByTitle"/>      
       <div v-if="loading" class="w-full h-56 flex flex-col justify-center align-center">
-        <ListLoader :list-style="'rows'" :row="6" :row-width="[800, 850, 700,750,600,650]" />
+        <ListLoader :list-style="'rows'" :row="6" :row-width="[1400, 850, 1400,750,1400,650]" />
       </div>
       <div v-else-if="error" class="flex justify-center items-center text-red-900"><i class="mdi mdi-alert-circle-outline text-4xl text-red-700 mx-4"></i> Something went wrong   <i @click="reload" class="mdi mdi-refresh text-4xl cursor-pointer text-black border m-4 rounded-md hover:bg-gray-100 text-center px-12"></i></div>
       <div v-else-if="filteredItems.length == 0" class="text-red-700 p-9 text-xl text-center font-bold">User Not Found!</div>

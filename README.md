@@ -17,6 +17,7 @@ A simple Todo List application built with Vue.js and GraphQL.
 - Apollo Client
 - Tailwind CSS
 - Pinia (State Management)
+- Hasura
 
 ## Getting Started
 
@@ -30,7 +31,7 @@ A simple Todo List application built with Vue.js and GraphQL.
 1. Clone the repository:
 
    ```shell
-   git clone https://github.com/Lykamopia/TodoList.git
+    git clone https://github.com/Lykamopia/TodoList-vue-superAdmin-role.git
 2. change directory
 
    ```shell

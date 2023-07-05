@@ -36,7 +36,7 @@ A simple Todo List application built with Vue.js and GraphQL.
 
    ```shell
    cd todo-list
-3. install all the dependencies 
+3. install all dependencies 
  
    ```shell
    npm install
@@ -47,12 +47,10 @@ A simple Todo List application built with Vue.js and GraphQL.
    src/apollo/ApolloClient.js
    ```
    Update the GRAPHQL_ENDPOINT variable with the URL of your GraphQL server.
-5. Serve the project
+5. Serve(run) the project
 
    ```shell
    npm run dev
    
 6. Open your browser and visit http://localhost:5173 to view the Todo List application.
 
-### Contributing
-Contributions are welcome! If you find any issues or have suggestions for improvement, please create an issue or submit a pull request.
